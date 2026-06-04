@@ -1,0 +1,15 @@
+{
+  "id": "memos-cloud-openclaw-plugin-readback",
+  "name": "MemOS OpenClaw Readback Lifecycle Shim",
+  "description": "Evaluation shim for staged MemOS plugin readback context.",
+  "version": "0.0.1",
+  "kind": "lifecycle",
+  "openclaw": {
+    "extensions": ["./index.mjs"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

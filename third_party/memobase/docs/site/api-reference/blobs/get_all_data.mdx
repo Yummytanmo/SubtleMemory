@@ -1,0 +1,10 @@
+---
+title: 'Get User Blobs'
+openapi: get /api/v1/users/blobs/{user_id}/{blob_type}
+---
+
+Retrieve all memory blobs of a specific type for a user. This endpoint supports pagination to manage large sets of memory data efficiently.
+
+Query Parameters:
+- page: Page number (default: 0)
+- page_size: Number of items per page (default: 10)

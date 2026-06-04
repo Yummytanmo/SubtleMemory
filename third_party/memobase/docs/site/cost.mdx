@@ -1,0 +1,24 @@
+---
+title: Performance and Cost
+---
+
+## Overview
+
+Memobase is designed for high performance and cost-efficiency.
+
+-   **Query Performance**: Queries are extremely fast because Memobase returns a pre-compiled user profile, eliminating the need for on-the-fly analysis.
+-   **Controllable Costs**: You can manage costs by controlling the size of user profiles. This is done by configuring the number of profile slots and the maximum token size for each.
+    -   Learn to design profile slots [here](/features/profile/profile_config).
+    -   Learn to control token limits [here](/references/cloud_config).
+-   **Insertion Efficiency**: New data is added to a buffer and processed in batches. This approach amortizes the cost of AI analysis, making insertions fast and inexpensive.
+    -   Learn to configure the buffer [here](/references/cloud_config).
+
+## Comparison vs. Other Solutions
+
+#### Memobase vs. [mem0](https://github.com/mem0ai/mem0)
+
+-   **Cost**: Memobase is approximately 5x more cost-effective.
+-   **Performance**: Memobase is roughly 5x faster.
+-   **Memory Quality**: mem0 provides gist-based memories, while Memobase delivers structured and organized profiles for more predictable recall.
+
+The full technical report is available [here](https://github.com/memodb-io/memobase/tree/docs/docs/experiments/900-chats).

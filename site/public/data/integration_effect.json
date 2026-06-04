@@ -1,0 +1,149 @@
+{
+  "generatedAt": "2026-06-03T15:03:49.452798+00:00",
+  "rows": [
+    {
+      "model": "gpt-5.4",
+      "system": "Mem0",
+      "baseMethod": "mem0",
+      "pluginMethod": "mem0-openclaw",
+      "base": {
+        "all": 68.99,
+        "complementary": 61.22,
+        "nuanced": 83.55,
+        "contradictory": 46.15
+      },
+      "plugin": {
+        "all": 71.29,
+        "complementary": 66.48,
+        "nuanced": 85.84,
+        "contradictory": 45.62
+      },
+      "delta": {
+        "all": 2.3,
+        "complementary": 5.26,
+        "nuanced": 2.29,
+        "contradictory": -0.53
+      }
+    },
+    {
+      "model": "gpt-5.4",
+      "system": "MemOS",
+      "baseMethod": "memos",
+      "pluginMethod": "memos-openclaw",
+      "base": {
+        "all": 56.83,
+        "complementary": 54.02,
+        "nuanced": 73.98,
+        "contradictory": 23.87
+      },
+      "plugin": {
+        "all": 56.5,
+        "complementary": 61.22,
+        "nuanced": 73.85,
+        "contradictory": 15.92
+      },
+      "delta": {
+        "all": -0.33,
+        "complementary": 7.2,
+        "nuanced": -0.13,
+        "contradictory": -7.95
+      }
+    },
+    {
+      "model": "gpt-5.4",
+      "system": "EverMemOS",
+      "baseMethod": "evermemos",
+      "pluginMethod": "evermemos-openclaw",
+      "base": {
+        "all": 68.13,
+        "complementary": 64.82,
+        "nuanced": 84.57,
+        "contradictory": 37.14
+      },
+      "plugin": {
+        "all": 69.05,
+        "complementary": 67.04,
+        "nuanced": 87.5,
+        "contradictory": 32.63
+      },
+      "delta": {
+        "all": 0.92,
+        "complementary": 2.22,
+        "nuanced": 2.93,
+        "contradictory": -4.51
+      }
+    },
+    {
+      "model": "gpt-oss-120b",
+      "system": "Mem0",
+      "baseMethod": "mem0",
+      "pluginMethod": "mem0-openclaw",
+      "base": {
+        "all": 64.91,
+        "complementary": 58.17,
+        "nuanced": 79.72,
+        "contradictory": 40.58
+      },
+      "plugin": {
+        "all": 62.94,
+        "complementary": 59.0,
+        "nuanced": 76.28,
+        "contradictory": 38.99
+      },
+      "delta": {
+        "all": -1.97,
+        "complementary": 0.83,
+        "nuanced": -3.44,
+        "contradictory": -1.59
+      }
+    },
+    {
+      "model": "gpt-oss-120b",
+      "system": "MemOS",
+      "baseMethod": "memos",
+      "pluginMethod": "memos-openclaw",
+      "base": {
+        "all": 52.23,
+        "complementary": 52.91,
+        "nuanced": 68.37,
+        "contradictory": 18.04
+      },
+      "plugin": {
+        "all": 47.83,
+        "complementary": 45.71,
+        "nuanced": 64.16,
+        "contradictory": 15.92
+      },
+      "delta": {
+        "all": -4.4,
+        "complementary": -7.2,
+        "nuanced": -4.21,
+        "contradictory": -2.12
+      }
+    },
+    {
+      "model": "gpt-oss-120b",
+      "system": "EverMemOS",
+      "baseMethod": "evermemos",
+      "pluginMethod": "evermemos-openclaw",
+      "base": {
+        "all": 60.45,
+        "complementary": 56.23,
+        "nuanced": 78.57,
+        "contradictory": 26.79
+      },
+      "plugin": {
+        "all": 59.79,
+        "complementary": 56.51,
+        "nuanced": 78.44,
+        "contradictory": 24.14
+      },
+      "delta": {
+        "all": -0.66,
+        "complementary": 0.28,
+        "nuanced": -0.13,
+        "contradictory": -2.65
+      }
+    }
+  ]
+}

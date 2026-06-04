@@ -1,0 +1,100 @@
+{
+  "id": "evermind-ai-everos",
+  "name": "SubtleMemory OpenClaw Plugin Evaluation Wrapper",
+  "description": "Evaluation wrapper for the EverMemOS ContextEngine plugin.",
+  "version": "1.0.0",
+  "kind": "context-engine",
+  "contextEngine": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseUrl": {
+        "type": "string",
+        "description": "EverMemOS API base URL"
+      },
+      "apiKey": {
+        "type": "string",
+        "description": "EverMemOS API key"
+      },
+      "userId": {
+        "type": "string",
+        "description": "EverMemOS user identifier"
+      },
+      "topK": {
+        "type": "number",
+        "default": 5,
+        "description": "Maximum memories requested during recall"
+      },
+      "memoryTypes": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "EverMemOS memory types requested during recall"
+      },
+      "retrieveMethod": {
+        "type": "string",
+        "default": "hybrid",
+        "description": "EverMemOS retrieval method"
+      },
+      "captureStrategy": {
+        "type": "string",
+        "default": "incremental_turns",
+        "description": "afterTurn capture strategy"
+      },
+      "asyncMode": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable async processing for personal memory adds"
+      },
+      "requestIntervalMs": {
+        "type": "number",
+        "default": 200,
+        "description": "Delay between chunked personal add requests"
+      },
+      "maxRetries": {
+        "type": "number",
+        "default": 5,
+        "description": "Maximum retry attempts for provider requests"
+      },
+      "retryBaseMs": {
+        "type": "number",
+        "default": 1000,
+        "description": "Base retry backoff in milliseconds"
+      },
+      "retryMaxMs": {
+        "type": "number",
+        "default": 8000,
+        "description": "Maximum retry backoff in milliseconds"
+      },
+      "personalBatchMaxMessages": {
+        "type": "number",
+        "default": 5,
+        "description": "Maximum messages per add chunk"
+      },
+      "personalBatchMaxChars": {
+        "type": "number",
+        "default": 5500,
+        "description": "Maximum approximate JSON characters per add chunk"
+      },
+      "saveEnabled": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable saving turns through afterTurn"
+      },
+      "readbackEnabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Use staged evaluation readback context instead of provider search"
+      },
+      "conversationId": {
+        "type": "string",
+        "description": "Evaluation conversation identifier"
+      },
+      "sessionScope": {
+        "type": "string",
+        "description": "Evaluation session scoping mode"
+      }
+    }
+  },
+  "main": "./index.mjs"
+}

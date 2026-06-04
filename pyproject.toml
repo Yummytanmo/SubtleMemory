@@ -1,0 +1,77 @@
+[project]
+name = "subtlememory"
+version = "0.1.0"
+description = "SubtleMemory memory-system evaluation framework"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "aiohttp>=3.8.0",
+    "aiolimiter>=1.2.1",
+    "certifi>=2025.10.5",
+    "json-repair>=0.30.0",
+    "mem0ai==2.0.1",
+    "numpy>=1.24.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.1",
+    "PyYAML>=6.0.0",
+    "requests>=2.31.0",
+    "rich>=13.0.0",
+    "tqdm>=4.65.0",
+    "zep-cloud>=2.0.0",
+]
+
+[dependency-groups]
+amem = [
+    "litellm",
+    "nltk",
+    "rank-bm25",
+    "scikit-learn",
+    "sentence-transformers",
+    "torch",
+    "transformers",
+]
+mirix = [
+    "anthropic",
+    "colorama",
+    "demjson3",
+    "docstring-parser",
+    "fastapi==0.104.1",
+    "google-genai",
+    "humps",
+    "httpx-sse",
+    "llama-index",
+    "llama-index-embeddings-google-genai",
+    "opentelemetry-api",
+    "opentelemetry-exporter-otlp",
+    "opentelemetry-instrumentation-requests",
+    "opentelemetry-sdk",
+    "pandas",
+    "pathvalidate",
+    "pg8000",
+    "pgvector",
+    "pillow",
+    "psutil",
+    "pydantic-settings",
+    "pydub",
+    "rank-bm25",
+    "rapidfuzz",
+    "setuptools<81",
+    "speechrecognition",
+    "tiktoken",
+    "uvicorn[standard]==0.24.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["evaluation", "evaluation.*", "common_utils", "common_utils.*", "memory_layer", "memory_layer.*"]
+exclude = ["evaluation.results", "evaluation.results.*"]
+
+[tool.setuptools.package-data]
+evaluation = [
+    "config/**/*",
+    "data/**/*",
+    "*.md",
+]

@@ -1,0 +1,142 @@
+---
+title: Memobase and the Model Context Protocol (MCP)
+---
+
+> [Full Code](https://github.com/memodb-io/memobase/tree/dev/src/mcp)
+
+This tutorial explains how to integrate Memobase with the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) to provide your AI agents with persistent, long-term memory. By using the Memobase MCP server, your agents can store, retrieve, and search memories, making them stateful and context-aware across conversations.
+
+## What is MCP?
+
+The Model Context Protocol is an open standard that allows AI assistants to securely connect to external data sources and tools. This enables them to access real-time information, execute functions, and maintain a persistent state, breaking free from the limitations of their training data.
+
+## Why Memobase + MCP?
+
+Traditional AI conversations are stateless. The Memobase MCP server changes this by providing:
+
+1.  **Persistent Memory**: Store conversation history and user preferences across sessions.
+2.  **Semantic Search**: Find relevant context using natural language queries.
+3.  **User Profiles**: Build a comprehensive understanding of users over time.
+4.  **Cross-Platform Compatibility**: Works with any MCP-compatible client, such as Claude Desktop, Cursor, or Windsurf.
+
+## Setup
+
+### Prerequisites
+
+-   Python 3.11+
+-   A Memobase backend (either [local](/references/local_config) or [cloud](https://www.memobase.io/en))
+
+### Installation
+
+We recommend using `uv` for installation:
+
+```bash
+# Install uv if you don't have it
+pip install uv
+
+# Clone the repository
+git clone https://github.com/memodb-io/memobase
+cd memobase/src/mcp
+
+# Install dependencies
+uv pip install -e .
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your Memobase credentials
+```
+
+### Environment Configuration
+
+Configure your `.env` file:
+
+```bash
+TRANSPORT=sse
+HOST=0.0.0.0
+PORT=8050
+MEMOBASE_API_KEY="your_api_key_here"
+MEMOBASE_BASE_URL="https://api.memobase.dev"
+```
+
+## Running the MCP Server
+
+Start the server using `uv`:
+
+```bash
+uv run src/main.py
+```
+
+The server will be available at `http://localhost:8050` with an SSE endpoint at `/sse`.
+
+## Client Integration
+
+Configure your MCP client to connect to the Memobase server. For example, in Cursor, add this to your `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "memobase": {
+      "transport": "sse",
+      "url": "http://localhost:8050/sse"
+    }
+  }
+}
+```
+
+## Available Tools
+
+The Memobase MCP server exposes three powerful tools to your AI agent.
+
+### 1. `save_memory`
+
+Stores information in long-term memory with semantic indexing.
+
+```python
+# Example usage in your AI agent
+await save_memory("User prefers dark mode and uses Python for backend development.")
+```
+
+### 2. `search_memories`
+
+Finds relevant context using natural language queries.
+
+```python
+# Search for relevant memories
+context = await search_memories("What are the user's programming language preferences?")
+```
+
+### 3. `get_user_profiles`
+
+Retrieves a comprehensive, structured user profile.
+
+```python
+# Get the full user profile
+profiles = await get_user_profiles()
+```
+
+## Real-World Example
+
+**Without Memory:**
+
+> **User**: "I prefer Python for backend development."
+> **AI**: "That's great! Python is excellent for backend work."
+> 
+> *Later...*
+> 
+> **User**: "What's the best language for my new API?"
+> **AI**: "There are many options, like Python, Node.js, or Go..."
+
+**With Memobase MCP:**
+
+> **User**: "I prefer Python for backend development."
+> **AI**: "Got it. I'll remember your preference for Python."
+> *(Memory saved: "User prefers Python for backend development")*
+> 
+> *Later...*
+> 
+> **User**: "What's the best language for my new API?"
+> **AI**: *(Searches memories)* "Based on your preference for Python, I'd recommend using FastAPI or Django."
+
+## Conclusion
+
+The Memobase MCP server transforms stateless AI interactions into intelligent, context-aware conversations. By providing persistent memory through a standardized protocol, you can build AI applications that learn, remember, and deliver truly personalized experiences.

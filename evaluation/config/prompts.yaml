@@ -1,0 +1,706 @@
+# LLM Judge Prompts
+# Used in: src/evaluators/llm_judge.py
+llm_judge:
+  system_prompt: |
+    You are a benchmark answer judge for open-ended memory evaluation questions.
+
+    Your task is to decide whether the generated answer should be labeled CORRECT or WRONG.
+
+    Use:
+    - accepted correct answers as the primary positive references
+    - known incorrect answers as the primary negative references
+    - case description, facts, and relation type as auxiliary context
+
+    Judge semantic agreement, not exact wording.
+
+    Return JSON only with a concise reason:
+    {{"reason": "short reason", "label": "CORRECT"}}
+    or
+    {{"reason": "short reason", "label": "WRONG"}}
+
+  user_prompt: |
+    Label the generated answer as CORRECT or WRONG.
+
+    Grading rules:
+    - Mark CORRECT if the generated answer matches the meaning of any accepted correct answer.
+    - Accept paraphrases, summaries, longer explanations, and equivalent wording.
+    - Mark WRONG if the generated answer clearly agrees with any known incorrect answer.
+    - Mark WRONG if the generated answer contradicts the accepted correct answers, misses the key point, or makes an unsupported over-confident choice.
+    - Use the case description, facts, and relation type as supporting context, not as a replacement for the accepted correct answers.
+    - If the case is contradictory or nuanced, prefer balanced grading and do not reward answers that collapse unresolved tension into an unjustified single conclusion.
+    - Ignore style or tone differences; strictly mark CORRECT if all required facts are present, even if it lists conditional differences to clarify the answer.
+
+    Question:
+    {question}
+    
+    Accepted correct answers:
+    {accepted_correct_answers_block}
+
+    Known incorrect answers:
+    {known_incorrect_answers_block}
+
+    Generated answer:
+    {generated_answer}
+
+    Facts:
+    {facts_block}
+
+    Case description:
+    {case_description_block}
+
+    Relation type:
+    {relation_type}
+
+    Relation subtype:
+    {relation_subtype}
+
+    Topic:
+    {topic}
+
+    Source:
+    {source}
+
+    Additional judging guidance:
+    {relation_guidance_block}
+    {source_guidance_block}
+    {persona_context_block}
+
+    Return JSON only with exactly two keys: label and reason.
+    The reason must be one brief sentence explaining the key grading decision.
+    {{"reason": "short reason", "label": "CORRECT"}}
+    or
+    {{"reason": "short reason", "label": "WRONG"}}
+
+
+# MetaClaw Answer Prompts
+# Used in: src/adapters/metaclaw_adapter.py
+metaclaw:
+  answer_prompt_empty: ""
+
+  answer_prompt_subtlememory_metaclaw_v2: |-
+    You are a helpful personal assistant. You are very good at distinguishing detailed conflicts and relationships in recalled memories, then using those memories to answer questions or complete tasks.
+
+    # CONTEXT
+    Relevant recalled memory/context has already been injected into this MetaClaw question by MetaClaw's configured memory backend before the current question. The injected context is the only memory evidence you may use.
+
+    # INSTRUCTIONS
+    1. Use only the recalled memory/context injected before the question. Do not use outside knowledge, common knowledge, or your own guess to resolve conflicts.
+    2. Your first priority is evidence fidelity: detect true unresolved conflicts, but do not over-detect conflicts from compatible evidence.
+    3. Identify the exact target needed by the question: preference, choice, attribute, state, factual answer, origin, date, name, or category.
+    4. A conflict requires mutually exclusive claims about the same target. Different interests, different sources, background facts, or multiple constraints are not conflicts unless they directly support incompatible answers to the question target.
+    5. Search the recalled memory/context for evidence that supports one answer and evidence that supports a different or opposing answer for the same target. Treat semantic opposites as conflict even when wording differs.
+    6. Treat these as unresolved conflicts unless the recalled memory/context explicitly resolves them with a time frame, context, correction, current-state update, condition, or exception:
+       - one memory says the user likes/prefers/enjoys/appreciates something while another says the user dislikes/avoids/does not enjoy/prefers a different category
+       - one memory supports choosing an option while another memory points away from that option or toward an incompatible option
+       - one factual memory gives answer A while another factual memory gives answer B for the same question target
+       - a user statement conflicts with an assistant summary or another session summary
+    7. Do not assume the newest statement overrides older evidence unless the recalled memory/context explicitly says it is an update, correction, or current state.
+    8. Do not invent a compromise, exception, or hierarchy to make conflicting evidence fit together. For example, do not infer "usually dislikes X but likes high-quality X" unless the transcript explicitly states that exact exception.
+    9. If unresolved conflict affects a recommendation, reservation, purchase, registration, list, ranking, yes/no answer, or any other decisive answer, do not choose a side and do not choose a safer alternative. Start with "Unclear — needs clarification first." Then briefly state both conflicting sides.
+    10. For factual questions, if the recalled memory/context contains two different final answers for the same target, say the remembered answers conflict and do not pick the answer that seems more correct from world knowledge.
+    11. If the question is explicitly time-anchored or context-anchored and that time/context clearly selects one side, answer that side directly.
+    12. Treat evidence as compatible, and answer directly, in these cases:
+       - multiple memories can all be true at the same time
+       - one memory is background while another directly answers the question
+       - one memory adds a constraint that can be satisfied rather than rejected
+       - different sources or phrasings support the same final answer
+       - the question requires combining multiple facts from separate memories
+       - several options or supporting paths are valid and the question only needs one or a fixed number of them
+    13. For multi-part questions, combine compatible facts across the recalled memory/context even if no single sentence contains the whole answer.
+    14. For choice questions, follow the option that best matches the question target; do not call unrelated background interests a conflict.
+    15. Keep the answer concise: one or two sentences. Do not show step-by-step reasoning.
+
+    # OUTPUT PATTERNS
+    - Unresolved preference/choice conflict: "Unclear — needs clarification first. The context says both [side A] and [side B], so I can't safely [make the requested choice]."
+    - Unresolved factual conflict: "Unclear — needs clarification first. The context gives conflicting remembered answers: [A] and [B]."
+    - Resolved by explicit time/context: answer directly and mention the resolving time/context briefly.
+
+    Question: {question}
+
+    Answer:
+
+  answer_prompt_metaclaw_default: |-
+    Based on what you remember from the conversations, answer the following memory benchmark question.
+
+    # INSTRUCTIONS
+    1. Use only memories that MetaClaw recalls from prior conversations.
+    2. Be specific and concise.
+    3. For time-related questions, use exact dates, months, years, or intervals instead of relative references.
+    4. If recalled memories contain conflicting information, mention the conflict briefly instead of guessing.
+    5. If memory is insufficient, answer with the best grounded answer supported by memory.
+
+    Question: {question}
+
+    Answer:
+
+
+# Online API Answer Prompts
+# Used in: src/adapters/online_base.py and its subclasses
+online_api:
+  default:
+    # SubtleMemory answer prompt variants.
+    # All memory systems share the selected SubtleMemory prompt.
+    # Default runtime key is answer_prompt_subtlememory_v1_concise.
+    # To test another variant, set this in a system config:
+    # answer:
+    #   subtlememory_prompt_key: v1_concise  # or v2, v3, v4
+    # Backup of the original v1 concise prompt before the 2026-05-14 replacement.
+    answer_prompt_subtlememory_v1_concise_backup_20260514: |-
+      You are a careful memory-grounded assistant answering open-ended persona questions.
+
+      # CONTEXT
+      {context}
+
+      # INSTRUCTIONS
+      - Answer the question or complete the user's requested task based on the provided context.
+      - First identify the information and details in the context that are useful for answering the question.
+      - If the useful information contains time-based updates, use the time mentioned by the user to decide which information applies.
+      - Some information may apply only in different situations, such as different ways of speaking in different professional roles.
+      - Some questions require using all useful information to provide a complete answer. In those cases, consider all relevant information when answering or completing the task.
+      - Do not treat the order of information in the context, or the chronological order of session timestamps, as proof that one piece of information is an update. The user may disclose older information in a later conversation, so do not trust only the latest session or the latest context item.
+      - When multiple pieces of information could each answer the question or help complete the task, but they would lead to different answers or outcomes and there is no clear way to decide, clarify the conflict.
+      - When the user mentions a fact or preference without giving a specific time, situation, or scope, treat it as having no explicit condition. If several unconditioned pieces of information would lead to different answers or task outcomes, do not choose one directly; ask for clarification.
+
+      Question: {question}
+
+      Answer:
+
+    answer_prompt_subtlememory_v1_concise: |-
+      You are a helpful personal assistant. You are very good at distinguishing detailed conflicts and relationships in memory, then using those memories to answer questions or complete tasks.
+
+      # CONTEXT
+      {context}
+
+      # INSTRUCTIONS
+      - Answer the question or complete the user's requested task based on the provided context.
+      - First identify the information and details in the context that are useful for answering the question.
+      - If the useful information contains time-based updates, use the time mentioned by the user to decide which information applies.
+      - Some information may apply only in different situations, such as different ways of speaking in different professional roles.
+      - Some questions require using all useful information to provide a complete answer. In those cases, consider all relevant information when answering or completing the task.
+      - Do not treat the order of information in the context, or the chronological order of session timestamps, as proof that one piece of information is an update. The user may disclose older information in a later conversation, so do not trust only the latest session or the latest context item.
+      - When multiple pieces of information could each answer the question or help complete the task, but they would lead to different answers or outcomes and there is no clear way to decide, clarify the conflict.
+      - When the user mentions a fact or preference without giving a specific time, situation, or scope, treat it as having no explicit condition. If several unconditioned pieces of information would lead to different answers or task outcomes, do not choose one directly; ask for clarification.
+
+      Question: {question}
+
+      Answer:
+
+    # Oracle v5 balanced/strict conflict-auditor prompt kept for A/B testing.
+    answer_prompt_subtlememory_v2_conflict_auditor: |-
+      You are a helpful personal assistant. You are very good at distinguishing detailed conflicts and relationships in recalled memories, then using those memories to answer questions or complete tasks.
+
+      # CONTEXT
+      The information below provides only the context relevant to the current question. It may contain stable preferences, temporary states, factual claims, summaries, or contradictions.
+
+      {context}
+
+      # INSTRUCTIONS
+      1. Use only the provided context. Do not use outside knowledge, common knowledge, or your own guess to resolve conflicts.
+      2. Your first priority is evidence fidelity: detect true unresolved conflicts, but do not over-detect conflicts from compatible evidence.
+      3. Identify the exact target needed by the question: preference, choice, attribute, state, factual answer, origin, date, name, or category.
+      4. A conflict requires mutually exclusive claims about the same target. Different interests, different sources, background facts, or multiple constraints are not conflicts unless they directly support incompatible answers to the question target.
+      5. Search the context for evidence that supports one answer and evidence that supports a different or opposing answer for the same target. Treat semantic opposites as conflict even when wording differs.
+      6. Treat these as unresolved conflicts unless the context explicitly resolves them with a time frame, context, correction, current-state update, condition, or exception:
+         - one memory says the user likes/prefers/enjoys/appreciates something while another says the user dislikes/avoids/does not enjoy/prefers a different category
+         - one memory supports choosing an option while another memory points away from that option or toward an incompatible option
+         - one factual memory gives answer A while another factual memory gives answer B for the same question target
+         - a user statement conflicts with an assistant summary or another session summary
+      7. Do not assume the newest statement overrides older evidence unless the context explicitly says it is an update, correction, or current state.
+      8. Do not invent a compromise, exception, or hierarchy to make conflicting evidence fit together. For example, do not infer "usually dislikes X but likes high-quality X" unless the transcript explicitly states that exact exception.
+      9. If unresolved conflict affects a recommendation, reservation, purchase, registration, list, ranking, yes/no answer, or any other decisive answer, do not choose a side and do not choose a safer alternative. Start with "Unclear — needs clarification first." Then briefly state both conflicting sides.
+      10. For factual questions, if the context contains two different final answers for the same target, say the remembered answers conflict and do not pick the answer that seems more correct from world knowledge.
+      11. If the question is explicitly time-anchored or context-anchored and that time/context clearly selects one side, answer that side directly.
+      12. Treat evidence as compatible, and answer directly, in these cases:
+         - multiple memories can all be true at the same time
+         - one memory is background while another directly answers the question
+         - one memory adds a constraint that can be satisfied rather than rejected
+         - different sources or phrasings support the same final answer
+         - the question requires combining multiple facts from separate memories
+         - several options or supporting paths are valid and the question only needs one or a fixed number of them
+      13. For multi-part questions, combine compatible facts across the context even if no single sentence contains the whole answer.
+      14. For choice questions, follow the option that best matches the question target; do not call unrelated background interests a conflict.
+      15. Keep the answer concise: one or two sentences. Do not show step-by-step reasoning.
+
+      # OUTPUT PATTERNS
+      - Unresolved preference/choice conflict: "Unclear — needs clarification first. The context says both [side A] and [side B], so I can't safely [make the requested choice]."
+      - Unresolved factual conflict: "Unclear — needs clarification first. The context gives conflicting remembered answers: [A] and [B]."
+      - Resolved by explicit time/context: answer directly and mention the resolving time/context briefly.
+
+      Question: {question}
+
+      Answer:
+
+    # Evidence-calibrated prompt for testing newer answer models.
+    # Compared with v2, this keeps conflict detection explicit but pushes the
+    # model to answer directly when the question target is supported.
+    answer_prompt_subtlememory_v3_evidence_calibrated: |-
+      You are a helpful personal assistant. You are very good at finding the memories that matter for a question and using them carefully to answer or complete the requested task.
+
+      The provided context is:
+
+      {context}
+
+      The user's question or task is:
+
+      {question}
+
+      Use this process:
+      - First identify every memory that is useful for the question. Ignore memories that are not useful for the requested answer or task.
+      - If the useful memories fit together and the answer needs more than one detail, use all of those details to produce a complete answer.
+      - If several memories look relevant but differ by time, situation, role, audience, purpose, attribute, or task type, choose the memory that matches the user's actual question. Do not merge details that only apply under different conditions.
+      - If useful memories would lead to different answers under the same effective conditions, and no explicit time or situation tells you which one applies, do not pick a side. State that the answer needs clarification, or fill the requested field with the user's required uncertainty wording.
+      - Do not use the order of memories in the context, or the chronological order of session timestamps, as the reason to treat one memory as an update. A later session may mention an older fact.
+
+      Examples:
+      - Context: The user prefers vegetarian meals. The user avoids peanuts. Question: "Pick a dinner option from the menu." Answer: choose an option that satisfies both vegetarian and peanut-free constraints.
+      - Context: The user wants formal wording for work emails. The user likes casual wording with close friends. Question: "Draft a note to my manager." Answer: use the work-email memory and write formally.
+      - Context: The user enjoys self-paced coding courses. The user says self-paced coding courses drain their motivation and they only want live classes. Question: "Choose one beginner coding course." Answer: say the course choice cannot be made safely until the learning format is clarified.
+
+      Answer:
+
+
+
+    # Case-classifier prompt for deterministic label-matching experiments.
+    # This prompt asks the answer model to classify the evidence relation
+    # instead of answering the user-facing task.
+    answer_prompt_subtlememory_v4_case_classifier: |-
+      You are a helpful relation classifier. You are very good at distinguishing detailed relationships among facts in the provided context.
+
+      The provided context is:
+      {context}
+
+      The user's question or task is:
+      {question}
+
+      Classification object:
+      - Do not answer the user's task. Classify the relationship among all useful context facts tied to the same target needed by the question.
+      - The target may be a preference, fact, state, constraint, entity attribute, date, title, category, field value, recommendation, resource choice, or action.
+      - Resource briefs, option lists, working forms, item counts, and output formats are usually task scaffolding. Do not classify candidate resources themselves unless they state facts about the target.
+
+      Classification standards:
+      - complementary / K>1: useful facts are compatible and must be combined to support the target.
+      - complementary / any_one: multiple compatible facts each independently support an acceptable answer or result; any one would be enough.
+      - nuanced / Temporal: useful facts differ because they apply to different times, versions, current-vs-past states, or "as of" dates.
+      - nuanced / Context: useful facts differ because they apply to different situations, roles, purposes, locations, audiences, definitions, attributes, or task types.
+      - contradictory / contradictory: useful facts would lead to different answers, choices, field values, recommendations, or actions under the same effective conditions, and no explicit condition resolves which one applies.
+
+      Classification process:
+      - First identify the target and useful facts in the context.
+      - Keep same-target sibling facts in scope even when the question asks for only one branch.
+      - Do not use context order or session timestamps alone to decide that one fact updates another.
+      - If useful facts are split by time or context, choose nuanced before complementary.
+      - If unqualified useful facts would lead to different safe answers or task results, choose contradictory.
+      - Otherwise choose complementary, then choose K>1 or any_one.
+      - Use only the provided context.
+
+      Return exactly one JSON object and nothing else:
+      {{"relation_type": "complementary|nuanced|contradictory", "relation_subtype": "K>1|any_one|Temporal|Context|contradictory", "reason": "one short sentence"}}
+
+    # Two-step oracle baseline, step 1: extract only facts useful for answering.
+    answer_prompt_subtlememory_v5_fact_extractor: |-
+      You are the evidence extraction step for a memory-grounded QA baseline.
+
+      # CONTEXT
+      The context below contains the conversation sessions available for the current question.
+
+      {context}
+
+      # QUESTION
+      {question}
+
+      # TASK
+      Extract up to {max_facts} atomic facts from the context that can help answer the question. Do not answer the question.
+
+      # USEFUL FACT GUIDANCE
+      - Keep direct facts that answer the target asked by the question.
+      - Keep constraints that must be combined to make the answer complete.
+      - Keep facts whose time, setting, role, purpose, speaker, or condition determines when they apply.
+      - Keep both sides when useful facts point to incompatible answers for the same target and no explicit anchor resolves which side applies.
+      - Ignore details that do not affect the requested answer.
+
+      # EXTRACTION RULES
+      1. Use only the context above.
+      2. Preserve exact names, labels, options, dates, numbers, speaker names, session ids, and source ids when they are visible.
+      3. Do not treat the latest session or latest message as truer unless the text explicitly states an update, correction, current state, replacement, or condition.
+      4. Do not invent a bridge, exception, hierarchy, or preference strength to make incompatible facts fit together.
+      5. Each fact must be standalone and concise.
+      6. The source should cite the message number, session id, or source_unit_id when visible.
+      7. The role must be one of: direct, constraint, anchor, clash, background.
+
+      # OUTPUT
+      Return exactly one JSON object and nothing else. Do not include markdown.
+      {{"facts": [{{"fact": "standalone useful fact", "source": "message/session/source id", "role": "direct"}}]}}
+
+    # Two-step oracle baseline, step 2: answer only from extracted facts.
+    answer_prompt_subtlememory_v5_fact_answer: |-
+      You are the answer step for a memory-grounded QA baseline.
+
+      # EXTRACTED FACTS
+      These facts were extracted from the available conversation context for the current question.
+
+      {facts}
+
+      # QUESTION
+      {question}
+
+      # INSTRUCTIONS
+      1. Answer using only the extracted facts above.
+      2. If useful facts fit together, combine every required constraint instead of optimizing for only one fact.
+      3. If a time, setting, role, purpose, speaker, or condition anchor selects which fact applies, answer from the selected fact and mention the anchor briefly when useful.
+      4. If useful facts point to incompatible final answers for the same target and no explicit anchor resolves them, do not choose by recency or plausibility. Say that the answer is unclear and name the conflicting sides.
+      5. If the extracted facts do not support the requested answer, say you do not know.
+      6. Preserve exact names, labels, options, dates, numbers, and field values.
+      7. Keep the final answer concise and directly responsive.
+
+      Answer:
+
+    answer_prompt_mem0: |
+      You are an intelligent memory assistant tasked with retrieving accurate information from conversation memories.
+
+      # CONTEXT:
+      You have access to memories from two speakers in a conversation. These memories contain
+      timestamped information that may be relevant to answering the question.
+
+      # INSTRUCTIONS:
+      1. Carefully analyze all provided memories from both speakers
+      2. Pay special attention to the timestamps to determine the answer
+      3. If the question asks about a specific event or fact, look for direct evidence in the memories
+      4. If the memories contain contradictory information, prioritize the most recent memory
+      5. If there is a question about time references (like "last year", "two months ago", etc.),
+         calculate the actual date based on the memory timestamp. For example, if a memory from
+         4 May 2022 mentions "went to India last year," then the trip occurred in 2021.
+      6. Always convert relative time references to specific dates, months, or years. For example,
+         convert "last year" to "2022" or "two months ago" to "March 2023" based on the memory
+         timestamp. Ignore the reference while answering the question.
+      7. Focus only on the content of the memories from both speakers. Do not confuse character
+         names mentioned in memories with the actual users who created those memories.
+      8. The answer should be less than 5-6 words.
+
+      # APPROACH (Think step by step):
+      1. First, examine all memories that contain information related to the question
+      2. Examine the timestamps and content of these memories carefully
+      3. Look for explicit mentions of dates, times, locations, or events that answer the question
+      4. If the answer requires calculation (e.g., converting relative time references), show your work
+      5. Formulate a precise, concise answer based solely on the evidence in the memories
+      6. Double-check that your answer directly addresses the question asked
+      7. Ensure your final answer is specific and avoids vague time references
+
+      {context}
+
+      Question: {question}
+
+      Answer:
+
+    answer_prompt_mem0_subtlememory: |
+      You are a careful memory-grounded assistant answering open-ended persona questions.
+
+      # CONTEXT:
+      You have access to retrieved conversation memories that may contain stable preferences, temporary states, and contradictions.
+
+      # INSTRUCTIONS:
+      1. Base your answer on the retrieved memories only.
+      2. Do NOT assume the most recent memory is automatically the source of truth.
+      3. If the memories point in different directions, answer in the way that best fits the question:
+         - if the question asks for a safe, broad, or representative framing, acknowledge the tension and give a balanced answer
+         - if the question is explicitly time-anchored, use the time information in context
+         - if the conflict cannot be cleanly resolved, say so briefly rather than pretending certainty
+      4. Do NOT collapse contradictory persona signals into one confident specific preference unless the context clearly supports that choice.
+      5. The answer should be concise but natural. Use 1-3 short sentences when needed.
+      6. Do not add extra explanation beyond what is needed to answer the question.
+
+      {context}
+
+      Question: {question}
+
+      Answer:
+    
+    answer_prompt_memos: |
+      You are a knowledgeable and helpful AI assistant.
+
+      # CONTEXT:
+      You have access to memories from two speakers in a conversation. These memories contain
+      timestamped information that may be relevant to answering the question.
+
+      # INSTRUCTIONS:
+      1. Carefully analyze all provided memories. Synthesize information across different entries if needed to form a complete answer.
+      2. Pay close attention to the timestamps to determine the answer. If memories contain contradictory information, the **most recent memory** is the source of truth.
+      3. If the question asks about a specific event or fact, look for direct evidence in the memories.
+      4. Your answer must be grounded in the memories. However, you may use general world knowledge to interpret or complete information found within a memory (e.g., identifying a landmark mentioned by description).
+      5. If the question involves time references (like "last year", "two months ago", etc.), you **must** calculate the actual date based on the memory's timestamp. For example, if a memory from 4 May 2022 mentions "went to India last year," then the trip occurred in 2021.
+      6. Always convert relative time references to specific dates, months, or years in your final answer.
+      7. Do not confuse character names mentioned in memories with the actual users who created them.
+      8. The answer must be brief (under 5-6 words) and direct, with no extra description.
+
+      # APPROACH (Think step by step):
+      1. First, examine all memories that contain information related to the question.
+      2. Synthesize findings from multiple memories if a single entry is insufficient.
+      3. Examine timestamps and content carefully, looking for explicit dates, times, locations, or events.
+      4. If the answer requires calculation (e.g., converting relative time references), perform the calculation.
+      5. Formulate a precise, concise answer based on the evidence from the memories (and allowed world knowledge).
+      6. Double-check that your answer directly addresses the question asked and adheres to all instructions.
+      7. Ensure your final answer is specific and avoids vague time references.
+
+      {context}
+
+      Question: {question}
+
+      Answer:
+
+    answer_prompt_memos_subtlememory: |
+      You are a careful memory-grounded assistant answering open-ended persona questions.
+
+      # CONTEXT:
+      You have access to retrieved conversation memories that may contain stable preferences, temporary states, and even contradictions.
+
+      # INSTRUCTIONS:
+      1. Base your answer on the retrieved memories only.
+      2. Do NOT assume the most recent memory is automatically the source of truth.
+      3. If the memories point in different directions, answer in the way that best fits the question:
+         - if the question asks for a safe, broad, or representative framing, acknowledge the tension and give a balanced answer
+         - if the question is explicitly time-anchored, use the time information in context
+         - if the conflict cannot be cleanly resolved, say so briefly rather than pretending certainty
+      4. Do NOT collapse contradictory persona signals into one confident specific preference unless the context clearly supports that choice.
+      5. The answer should be concise but natural. Use 1-3 short sentences when needed.
+      6. Do not add extra explanation beyond what is needed to answer the question.
+
+      # APPROACH:
+      1. Identify the memories most relevant to the question.
+      2. Check whether they agree, conflict, or describe different time periods.
+      3. Answer directly in a way that reflects that evidence structure.
+
+      {context}
+
+      Question: {question}
+
+      Answer:
+
+    answer_prompt_memu_subtlememory: |
+      You are a careful memory-grounded assistant answering open-ended persona questions.
+
+      # CONTEXT:
+      You have access to retrieved user memories and summaries that may contain stable preferences, temporary states, and contradictions.
+
+      # INSTRUCTIONS:
+      1. Base your answer on the retrieved memories only.
+      2. Do NOT assume the most recent memory is automatically the source of truth.
+      3. If the memories point in different directions, answer in the way that best fits the question:
+         - if the question asks for a safe, broad, or representative framing, acknowledge the tension and give a balanced answer
+         - if the question is explicitly time-anchored, use the time information in context
+         - if the conflict cannot be cleanly resolved, say so briefly rather than pretending certainty
+      4. Do NOT collapse contradictory persona signals into one confident specific preference unless the context clearly supports that choice.
+      5. The answer should be concise but natural. Use 1-3 short sentences when needed.
+      6. Do not add extra explanation beyond what is needed to answer the question.
+
+      {context}
+
+      Question: {question}
+
+      Answer:
+    
+    answer_prompt_cot: |
+      You are an intelligent memory assistant tasked with retrieving accurate information from episodic memories.
+
+      # CONTEXT:
+      You have access to episodic memories from conversations between two speakers. These memories contain
+      timestamped information that may be relevant to answering the question.
+
+      # INSTRUCTIONS:
+      Your goal is to synthesize information from all relevant memories to provide a comprehensive and accurate answer.
+      You MUST follow a structured Chain-of-Thought process to ensure no details are missed.
+      Actively look for connections between people, places, and events to build a complete picture. Synthesize information from different memories to answer the user's question.
+      It is CRITICAL that you move beyond simple fact extraction and perform logical inference. When the evidence strongly suggests a connection, you must state that connection. Do not dismiss reasonable inferences as "speculation." Your task is to provide the most complete answer supported by the available evidence.
+
+      # CRITICAL REQUIREMENTS:
+      1. NEVER omit specific names - use "Amy's colleague Rob" not "a colleague"
+      2. ALWAYS include exact numbers, amounts, prices, percentages, dates, times
+      3. PRESERVE frequencies exactly - "every Tuesday and Thursday" not "twice a week"
+      4. MAINTAIN all proper nouns and entities as they appear
+
+      # RESPONSE FORMAT (You MUST follow this structure):
+
+      ## STEP 1: RELEVANT MEMORIES EXTRACTION
+      [List each memory that relates to the question, with its timestamp]
+      - Memory 1: [timestamp] - [content]
+      - Memory 2: [timestamp] - [content]
+      ...
+
+      ## STEP 2: KEY INFORMATION IDENTIFICATION
+      [Extract ALL specific details from the memories]
+      - Names mentioned: [list all person names, place names, company names]
+      - Numbers/Quantities: [list all amounts, prices, percentages]
+      - Dates/Times: [list all temporal information]
+      - Frequencies: [list any recurring patterns]
+      - Other entities: [list brands, products, etc.]
+
+      ## STEP 3: CROSS-MEMORY LINKING
+      [Identify entities that appear in multiple memories and link related information. Make reasonable inferences when entities are strongly connected.]
+      - Shared entities: [list people, places, events mentioned across different memories]
+      - Connections found: [e.g., "Memory 1 mentions A moved from hometown → Memory 2 mentions A's hometown is LA → Therefore A moved from LA"]
+      - Inferred facts: [list any facts that require combining information from multiple memories]
+
+      ## STEP 4: TIME REFERENCE CALCULATION
+      [If applicable, convert relative time references]
+      - Original reference: [e.g., "last year" from May 2022]
+      - Calculated actual time: [e.g., "2021"]
+
+      ## STEP 5: CONTRADICTION CHECK
+      [If multiple memories contain different information]
+      - Conflicting information: [describe]
+      - Resolution: [explain which is most recent/reliable]
+
+      ## STEP 6: DETAIL VERIFICATION CHECKLIST
+      - [ ] All person names included: [list them]
+      - [ ] All locations included: [list them]
+      - [ ] All numbers exact: [list them]
+      - [ ] All frequencies specific: [list them]
+      - [ ] All dates/times precise: [list them]
+      - [ ] All proper nouns preserved: [list them]
+
+      ## STEP 7: ANSWER FORMULATION
+      [Explain how you're combining the information to answer the question]
+
+      ## FINAL ANSWER:
+      [Provide the concise answer with ALL specific details preserved]
+
+      ---
+
+      {context}
+
+      Question: {question}
+
+      Now, follow the Chain-of-Thought process above to answer the question:
+
+    answer_prompt_zep: |
+      You are a helpful expert assistant answering questions based on the provided context.
+
+      # CONTEXT:
+      You have access to facts and entities from a conversation.
+
+      # INSTRUCTIONS:
+      1. Carefully analyze all provided memories (facts and entities)
+      2. Pay special attention to the timestamps (event_time) to determine when events occurred
+      3. If the question asks about a specific event or fact, look for direct evidence in the memories
+      4. If the memories contain contradictory information, prioritize the most recent memory
+      5. Always convert relative time references to specific dates, months, or years
+      6. Be as specific as possible when talking about people, places, and events
+      7. Timestamps in memories represent the actual time the event occurred, not the time the event was mentioned in a message
+
+      # IMPORTANT CLARIFICATION:
+      When interpreting memories, use the event_time (timestamp) to determine when the described event happened, not when someone talked about the event.
+
+      Example:
+      Memory: FACT (event_time: 2023-03-15T16:33:00Z): I went to the vet yesterday.
+      Question: What day did I go to the vet?
+      Correct Answer: March 15, 2023
+      Explanation: Even though the phrase says "yesterday," the timestamp shows the event was recorded as happening on March 15th. Therefore, the actual vet visit happened on that date, regardless of the word "yesterday" in the text.
+
+      # APPROACH (Think step by step):
+      1. First, examine all memories (facts and entities) that contain information related to the question
+      2. Examine the timestamps and content of these memories carefully
+      3. Look for explicit mentions of dates, times, locations, or events that answer the question
+      4. If the answer requires calculation (e.g., converting relative time references), show your work
+      5. Formulate a precise, concise answer based solely on the evidence in the memories
+      6. Double-check that your answer directly addresses the question asked
+      7. Ensure your final answer is specific and avoids vague time references
+
+      {context}
+
+      Question: {question}
+      Answer:
+
+    answer_prompt_zep_subtlememory: |
+      You are a careful assistant answering open-ended persona questions from facts and entities.
+
+      # CONTEXT:
+      You have access to facts and entities extracted from a conversation. They may reflect stable traits, temporary states, or contradictions.
+
+      # INSTRUCTIONS:
+      1. Base your answer on the provided facts and entities only.
+      2. Do NOT assume the most recent event is automatically the source of truth.
+      3. If the evidence points in different directions, answer in the way that best fits the question:
+         - if the question asks for a broad, safe, or representative framing, acknowledge the tension and give a balanced answer
+         - if the question is explicitly time-anchored, use the event_time information in context
+         - if the conflict cannot be cleanly resolved, say so briefly rather than pretending certainty
+      4. Do NOT overcommit to one side of a contradiction unless the evidence clearly supports that choice.
+      5. The answer should be concise but natural. Use 1-3 short sentences when needed.
+
+      {context}
+
+      Question: {question}
+      Answer:
+
+  templates:
+    # Default template (shared by Mem0, Memos, Memu)
+    # Uses speaker_1/speaker_2 as unified variable names
+    default: |
+      Memories for {speaker_1}:
+
+      {speaker_1_memories}
+
+      Memories for {speaker_2}:
+
+      {speaker_2_memories}
+    
+    # Zep template - uses facts and entities format
+    zep: |
+      FACTS and ENTITIES represent relevant context to the current conversation.
+
+      # These are the most relevant facts for the conversation along with the datetime of the event that the fact refers to.
+      # If a fact mentions something happening a week ago, then the datetime will be the date time of last week and not the datetime
+      # of when the fact was stated.
+      # Timestamps in memories represent the actual time the event occurred, not the time the event was mentioned in a message.
+          
+      <FACTS>
+      {facts}
+      </FACTS>
+
+      # These are the most relevant entities
+      # ENTITY_NAME: entity summary
+      <ENTITIES>
+      {entities}
+      </ENTITIES>
+    
+
+
+# Memory Extraction / Add Stage Prompts
+# Used during the add stage to guide memory extraction and formatting
+add_stage:
+  # Mem0 custom memory extraction instructions
+  mem0:
+    custom_instructions: |
+      Generate personal memories that follow these guidelines:
+      
+      1. Each memory should be self-contained with complete context, including:
+         - The person's name, do not use "user" while creating memories
+         - Personal details (career aspirations, hobbies, life circumstances)
+         - Emotional states and reactions
+         - Ongoing journeys or future plans
+         - Specific dates when events occurred
+      
+      2. Include meaningful personal narratives focusing on:
+         - Identity and self-acceptance journeys
+         - Family planning and parenting
+         - Creative outlets and hobbies
+         - Mental health and self-care activities
+         - Career aspirations and education goals
+         - Important life events and milestones
+      
+      3. Make each memory rich with specific details rather than general statements
+         - Include timeframes (exact dates when possible)
+         - Name specific activities (e.g., "charity race for mental health" rather than just "exercise")
+         - Include emotional context and personal growth elements
+         - When resolving relative time references such as "yesterday", "last year", or "last night",
+           use the observation timestamp attached to this add request, not the current system date
+      
+      4. Extract memories only from user messages, not incorporating assistant responses
+      
+      5. Format each memory as a paragraph with a clear narrative structure that captures the person's experience, challenges, and aspirations
+  
+  # Future: other system memory extraction instructions can be added here
+  # memos:
+  #   extraction_prompt: |
+  #     ...
+  # 
+  # memu:
+  #   extraction_prompt: |
+  #     ...

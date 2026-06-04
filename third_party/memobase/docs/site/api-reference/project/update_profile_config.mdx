@@ -1,0 +1,32 @@
+---
+title: 'Update Current Profile Config'
+openapi: post /api/v1/project/profile_config
+---
+
+
+Updates the current profile config. Checkout more details in [Profile Config](/features/customization/profile#understand-the-user-profile-slots).
+
+Below is an example of your profile config:
+
+```yaml
+overwrite_user_profiles:
+  - topic: "User Basic Information"
+    sub_topics:
+      - name: "Name"
+      - name: "Gender"
+      - name: "Age"
+      - name: "Occupation"
+        description: "For example, a programmer"
+      - name: "City"
+  - topic: "User Pet Information"
+    sub_topics:
+      - name: "Purpose of Pet Ownership"
+      - name: "Attitude Towards Pet Ownership"
+        description: "whether they like to play with the pet"
+      - name: "Pet Medical Habits"
+        description: "Whether they are accustomed to finding medicine themselves"
+...
+``` 
+
+Your profile config will not as strong as the `config.yaml` you used to start Memobase server,
+it only affect the profile slots.

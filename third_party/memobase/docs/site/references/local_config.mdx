@@ -1,0 +1,137 @@
+---
+title: Self-Hosted Configuration
+---
+If you develop Memobase locally, you can use a `config.yaml` file to configure Memobase Backend.
+## Full Explanation of `config.yaml`
+We use a single `config.yaml` file as the source to configure Memobase Backend. An example is like this:
+
+```yaml
+# Storage and Performance
+persistent_chat_blobs: false
+buffer_flush_interval: 3600
+max_chat_blob_buffer_token_size: 1024
+max_profile_subtopics: 15
+max_pre_profile_token_size: 128
+cache_user_profiles_ttl: 1200
+
+# Timezone
+use_timezone: "UTC"
+
+# LLM Configuration
+language: "en"
+llm_style: "openai"
+llm_base_url: "https://api.openai.com/v1/"
+llm_api_key: "YOUR-KEY"
+best_llm_model: "gpt-4o-mini"
+summary_llm_model: null
+
+# Embedding Configuration
+enable_event_embedding: true
+embedding_provider: "openai"
+embedding_api_key: null
+embedding_base_url: null
+embedding_dim: 1536
+embedding_model: "text-embedding-3-small"
+embedding_max_token_size: 8192
+
+# Profile Configuration
+additional_user_profiles:
+  - topic: "gaming"
+    sub_topics:
+      - "Soul-Like"
+      - "RPG"
+profile_strict_mode: false
+profile_validate_mode: true
+
+# Summary Configuration
+minimum_chats_token_size_for_event_summary: 256
+```
+
+## Configuration Categories
+
+### Storage and Performance
+- `persistent_chat_blobs`: boolean, default to `false`. If set to `true`, the chat blobs will be persisted in the database.
+- `buffer_flush_interval`: int, default to `3600` (1 hour). Controls how frequently the chat buffer is flushed to persistent storage.
+- `max_chat_blob_buffer_token_size`: int, default to `1024`. This is the parameter to control the buffer size of Memobase. Larger numbers lower your LLM cost but increase profile update lag.
+- `max_profile_subtopics`: int, default to `15`. The maximum subtopics one topic can have. When a topic has more than this, it will trigger a re-organization.
+- `max_pre_profile_token_size`: int, default to `128`. The maximum token size of one profile slot. When a profile slot is larger, it will trigger a re-summary.
+- `cache_user_profiles_ttl`: int, default to `1200` (20 minutes). Time-to-live for cached user profiles in seconds.
+- `llm_tab_separator`: string, default to `"::"`. The separator used for tabs in LLM communications.
+
+### Timezone Configuration
+- `use_timezone`: string, default to `null`. Options include `"UTC"`, `"America/New_York"`, `"Europe/London"`, `"Asia/Tokyo"`, and `"Asia/Shanghai"`. If not set, the system's local timezone is used.
+
+### LLM Configuration
+- `language`: string, default to `"en"`, available options `{"en", "zh", "ja"}`. The prompt language of Memobase.
+- `llm_style`: string, default to `"openai"`, available options `{"openai", "doubao_cache"}`. The LLM provider style.
+- `llm_base_url`: string, default to `null`. The base URL of any OpenAI-Compatible API.
+- `llm_api_key`: string, required. Your LLM API key.
+- `llm_openai_default_query`: dictionary, default to `null`. Default query parameters for OpenAI API calls.
+- `llm_openai_default_header`: dictionary, default to `null`. Default headers for OpenAI API calls.
+- `best_llm_model`: string, default to `"gpt-4o-mini"`. The AI model to use for primary functions.
+- `summary_llm_model`: string, default to `null`. The AI model to use for summarization. If not specified, falls back to `best_llm_model`.
+- `system_prompt`: string, default to `null`. Custom system prompt for the LLM.
+
+### Embedding Configuration
+- `enable_event_embedding`: boolean, default to `true`. Whether to enable event embedding.
+- `embedding_provider`: string, default to `"openai"`, available options `{"openai", "jina"}`. The embedding provider to use.
+- `embedding_api_key`: string, default to `null`. If not specified and provider is OpenAI, falls back to `llm_api_key`.
+- `embedding_base_url`: string, default to `null`. For Jina, defaults to `"https://api.jina.ai/v1"` if not specified.
+- `embedding_dim`: int, default to `1536`. The dimension size of the embeddings.
+- `embedding_model`: string, default to `"text-embedding-3-small"`. For Jina, must be `"jina-embeddings-v3"`.
+- `embedding_max_token_size`: int, default to `8192`. Maximum token size for text to be embedded.
+
+### Profile Configuration
+Check what a profile is in Memobase [here](/features/customization/profile).
+- `additional_user_profiles`: list, default to `[]`. Add additional user profiles. Each profile should have a `topic` and a list of `sub_topics`.
+  - For `topic`, it must have a `topic` field and optionally a `description` field:
+  ```yaml
+  additional_user_profiles:
+    - topic: "gaming"
+      # description: "User's gaming interests"
+      sub_topics:
+        ...
+  ```
+  - For each `sub_topic`, it must have a `name` field (or just be a string) and optionally a `description` field:
+  ```yaml
+  sub_topics:
+    - "SP1"
+    - name: "SP2"
+      description: "Sub-Profile 2" 
+  ```
+- `overwrite_user_profiles`: list, default to `null`. Format is the same as `additional_user_profiles`.
+  Memobase has built-in profile slots like `work_title`, `name`, etc. For full control of the slots, use this parameter.
+  The final profile slots will be only those defined here.
+- `profile_strict_mode`: boolean, default to `false`. Enforces strict validation of profile structure.
+- `profile_validate_mode`: boolean, default to `true`. Enables validation of profile data.
+
+### Summary Configuration
+- `minimum_chats_token_size_for_event_summary`: int, default to `256`. Minimum token size required to trigger an event summary.
+- `event_tags`: list, default to `[]`. Custom event tags for classification.
+
+### Telemetry Configuration
+- `telemetry_deployment_environment`: string, default to `"local"`. The deployment environment identifier for telemetry.
+
+## Environment Variable Overrides
+
+All configuration values can be overridden using environment variables. The naming convention is to prefix the configuration field name with `MEMOBASE_` and convert it to uppercase.
+
+For example, to override the `llm_api_key` configuration:
+
+```bash
+export MEMOBASE_LLM_API_KEY="your-api-key-here"
+```
+
+This is particularly useful for:
+- Keeping sensitive information like API keys out of configuration files
+- Deploying to different environments (development, staging, production)
+- Containerized deployments where environment variables are the preferred configuration method
+
+For complex data types (lists, dictionaries, etc.), you can use JSON-formatted strings:
+
+```bash
+# Override additional_user_profiles with a JSON array
+export MEMOBASE_ADDITIONAL_USER_PROFILES='[{"topic": "gaming", "sub_topics": ["RPG", "Strategy"]}]'
+```
+
+The server will automatically parse JSON-formatted environment variables when appropriate.

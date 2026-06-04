@@ -1,0 +1,8 @@
+max_chat_blob_buffer_token_size: 512
+buffer_flush_interval: 3600
+
+llm_api_key: ollama
+llm_base_url: http://host.docker.internal:11434/v1
+best_llm_model: qwen2.5:7b
+
+language: en

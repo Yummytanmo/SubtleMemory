@@ -1,0 +1,14 @@
+---
+title: 'Get Project Daily Usage'
+openapi: get /api/v1/project/usage
+---
+
+Get the daily usage statistics of a project over the last N days.
+
+This endpoint provides detailed usage metrics including:
+- Total blob insertions per day
+- Successful blob insertions per day  
+- Input tokens consumed per day
+- Output tokens consumed per day
+
+The data is returned as a time series for the specified number of days, allowing you to track usage patterns and project activity over time. 

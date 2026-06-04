@@ -1,0 +1,19 @@
+{
+  "id": "openclaw-mem0-readback-facade",
+  "kind": "memory",
+  "name": "OpenClaw Mem0 Readback Facade",
+  "description": "Question-scoped Mem0 readback facade for evaluation",
+  "version": "0.0.1",
+  "openclaw": {
+    "extensions": ["./index.mjs"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "topK": {
+        "type": "number"
+      }
+    }
+  }
+}

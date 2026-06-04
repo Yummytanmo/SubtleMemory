@@ -1,0 +1,69 @@
+name: "openclaw-memos-plugin"
+version: "1.0"
+description: "OpenClaw local agent with MemOS lifecycle plugin"
+
+adapter: "openclaw_memos_plugin"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+semantic_chunk_policy: "memos_plugin_generated_memories"
+transport_batch_policy: "openclaw_lifecycle_agent_end_hook_per_session"
+supported_datasets: ["subtlememory"]
+
+num_workers: 1
+
+openclaw:
+  root: "${OPENCLAW_ROOT}"
+  cli: "${OPENCLAW_CLI}"
+  base_config_path: "${OPENCLAW_CONFIG_PATH}"
+  memory_search_provider: "local"
+
+plugin:
+  id: "memos-cloud-openclaw-plugin"
+  path: "${OPENCLAW_MEMOS_PLUGIN_DIR}"
+  entry_path: "${OPENCLAW_MEMOS_PLUGIN_PATH}"
+  hook_runner_path: "evaluation/src/adapters/openclaw/assets/plugin_hook_runner.mjs"
+  base_url: "${MEMOS_BASE_URL:https://memos.memtensor.cn/api/openmem/v1}"
+  api_key: "${MEMOS_KEY}"
+  async_mode: true
+  timeout_ms: 8000
+  retries: 0
+  config:
+    memoryLimitNumber: 20
+    preferenceLimitNumber: 20
+    relativity: 0.0
+    recallGlobal: true
+
+memory:
+  messages: 50
+  search_top_k: 50
+  min_score: 0.08
+
+search:
+  num_workers: 1
+  top_k: 50
+
+llm:
+  provider: "openai"
+  model: "${ANSWER_LLM_MODEL:gpt-4o-mini}"
+  api: "openai-completions"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://api.openai.com/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+answer:
+  num_workers: 2
+  checkpoint_interval: 10
+  max_retries: 2
+  openclaw_max_retries: 5
+  openclaw_retry_delay_seconds: 2
+  openclaw_agent_timeout_seconds: 210
+  openclaw_subprocess_timeout_seconds: 225
+  use_openclaw_agent: true
+  openclaw_agent_prompt_key: "answer_prompt_empty"
+  allow_llm_fallback: false
+  timeout_seconds: 1200
+
+readiness:
+  budget_seconds: 0
+  poll_interval_seconds: 0

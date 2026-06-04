@@ -1,0 +1,481 @@
+---
+title: 'Quickstart'
+---
+
+Ready to give your AI a memory boost? Here’s how to get started.
+
+<CardGroup cols={2}>
+  <Card title="Patch OpenAI" icon="webhook" href="practices/openai">
+    Upgrade your existing OpenAI setup with Memobase memory.
+  </Card>
+  <Card title="Client-Side" icon="code-branch" href="#memobase-client">
+    Use our SDKs or APIs to connect your app to a Memobase backend.
+  </Card>
+  <Card title="Server-Side" icon="chart-simple" href="#memobase-backend">
+    Deploy your own Memobase backend. It's easier than assembling IKEA furniture.
+  </Card>
+</CardGroup>
+
+
+## Memobase Client
+
+### Step 1: Get Prepped
+
+<AccordionGroup>
+<Accordion title="Install the SDK">
+<CodeGroup>
+```bash pip
+pip install memobase
+```
+```bash npm
+npm install @memobase/memobase
+```
+```bash deno
+deno add jsr:@memobase/memobase
+```
+
+```bash go
+go get github.com/memodb-io/memobase/src/client/memobase-go@latest
+```
+
+```bash http
+# Living on the edge with cURL? Skip to the next step.
+```
+</CodeGroup>
+</Accordion>
+<Accordion title="Find Your Project URL and Token">
+You'll get these when you set up your [backend](#memobase-backend). Keep them handy.
+</Accordion>
+</AccordionGroup>
+
+### Step 2: Connect to the Backend
+
+<AccordionGroup>
+<Accordion title="Instantiate the Client">
+<CodeGroup>
+```python Python
+from memobase import MemoBaseClient
+
+client = MemoBaseClient(
+    project_url=YOUR_PROJECT_URL,
+    api_key=YOUR_API_KEY,
+)
+```
+```typescript Node
+import { MemoBaseClient, Blob, BlobType } from '@memobase/memobase';
+
+const client = new MemoBaseClient(process.env['MEMOBASE_PROJECT_URL'], process.env['MEMOBASE_API_KEY'])
+```
+
+{/* ```go Go
+import (
+    "fmt"
+    "log"
+
+    "github.com/memodb-io/memobase/src/client/memobase-go/core"
+)
+
+func main() {
+    projectURL := "YOUR_PROJECT_URL"
+    apiKey := "YOUR_API_KEY"
+    // Initialize the client
+    client, err := core.NewMemoBaseClient(
+        projectURL,
+        apiKey,
+    )
+    if err != nil {
+        log.Fatalf("Failed to create client: %v", err)
+    }
+}
+``` */}
+</CodeGroup>
+</Accordion>
+<Accordion title="Test the Connection (Ping!)">
+<CodeGroup>
+
+```python Python
+assert client.ping()
+```
+```typescript Node
+const ping = await client.ping()
+```
+{/* ```go Go
+import (
+    "fmt"
+    "log"
+
+    "github.com/memodb-io/memobase/src/client/memobase-go/core"
+)
+
+func main() {
+    projectURL := "YOUR_PROJECT_URL"
+    apiKey := "YOUR_API_KEY"
+    // Initialize the client
+    client, err := core.NewMemoBaseClient(
+        projectURL,
+        apiKey,
+    )
+    if err != nil {
+        log.Fatalf("Failed to create client: %v", err)
+    }
+
+    // Ping the server
+    if !client.Ping() {
+        log.Fatal("Failed to connect to server")
+    }
+    fmt.Println("Successfully connected to server")
+}
+``` */}
+
+```bash cURL
+curl -H "Authorization: Bearer $YOUR_API_KEY" "$YOUR_PROJECT_URL/api/v1/healthcheck"
+```
+
+```json Output
+{"data":null,"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion>
+</AccordionGroup>
+
+### Step 3: User Management
+
+Create, read, update, and delete users.
+
+<AccordionGroup>
+<Accordion title="Create a User">
+<CodeGroup>
+
+```python Python
+uid = client.add_user({"name": "Gustavo"})
+```
+```typescript Node
+const userId = await client.addUser({name: "Gustavo"})
+```
+{/* ```go Go
+import "github.com/google/uuid"
+
+userID := uuid.New().String()
+_, err := client.AddUser(map[string]interface{}{"name": "Gustavo"}, userID)
+``` */}
+```bash cURL
+curl -X POST "$YOUR_PROJECT_URL/api/v1/users" \
+     -H "Authorization: Bearer $YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"data": {"name": "Gustavo"}}'
+```
+
+```json Output
+{"data":{"id":"some-unique-user-id"},"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion>
+
+<Accordion title="Get a User">
+<CodeGroup>
+
+```python Python
+u = client.get_user(uid)
+```
+
+```typescript Node
+const user = await client.getUser(userId)
+```
+
+{/* ```go Go
+user, err := client.GetUser(userID, false)
+``` */}
+
+```bash cURL
+curl -X GET "$YOUR_PROJECT_URL/api/v1/users/{uid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```json Output
+{"data":{"data":{"name":"Gustavo", "status": "caffeinated"}, ... },"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion>
+
+{/* <Accordion title="Delete a User">
+<CodeGroup>
+
+```python Python
+client.delete_user(uid)
+```
+
+```typescript Node
+await client.deleteUser(userId)
+```
+
+```go Go
+err = client.DeleteUser(userID)
+```
+
+```bash cURL
+curl -X DELETE "$YOUR_PROJECT_URL/api/v1/users/{uid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```json Output
+{"data":null,"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion> */}
+</AccordionGroup>
+
+
+### Step 4: Insert Message
+
+Now that you have a user, let's give them some memories.
+
+<AccordionGroup>
+<Accordion title="Insert Data (e.g. Chats)">
+<CodeGroup>
+
+```python Python
+from memobase import ChatBlob
+b = ChatBlob(messages=[
+    {"role": "user", "content": "Hi, I'm here again"},
+    {"role": "assistant", "content": "Hi, Gus! How can I help you?"}
+])
+u = client.get_user(uid)
+bid = u.insert(b)
+```
+
+```typescript Node
+const blobId = await user.insert(Blob.parse({
+    type: BlobType.Enum.chat,
+    messages: [{
+        role: 'user',
+        content: 'Hello, how are you?'
+    }]
+}))
+```
+
+{/* ```go Go
+chatBlob := &blob.ChatBlob{
+    Messages: []blob.OpenAICompatibleMessage{
+        {Role: "user", Content: "Hello, I am Jinjia!"},
+        {Role: "assistant", Content: "Hi there! How can I help you today?"},
+    },
+}
+blobID, err := user.Insert(chatBlob, false)
+``` */}
+
+```bash cURL
+curl -X POST "$YOUR_PROJECT_URL/api/v1/blobs/insert/{uid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{ "blob_type": "chat", "blob_data": { "messages": [ {"role": "user","content": "Hi, Im here again"}, {"role": "assistant", "content": "Hi, Gus! How can I help you?"}] }}'
+```
+
+```json Output
+{"data":{"id":"some-unique-blob-id"},"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion>
+
+{/* <Accordion title="Get Data">
+<CodeGroup>
+
+```python Python
+b = u.get(bid)
+```
+
+```typescript Node
+const blob = await user.get(blobId)
+```
+
+```go Go
+blob, err := user.Get(blobID)
+```
+
+```bash cURL
+curl -X GET "$YOUR_PROJECT_URL/api/v1/blobs/{uid}/{bid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```json Output
+{"data":{"blob_type":"chat", "blob_data":{...}},"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion>
+
+<Accordion title="Delete Data">
+<CodeGroup>
+
+```python Python
+u.delete(bid)
+```
+
+```typescript Node
+await user.delete(blobId)
+```
+
+```go Go
+err := user.Delete(blobID)
+```
+
+```bash cURL
+curl -X DELETE "$YOUR_PROJECT_URL/api/v1/blobs/{uid}/{bid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```json Output
+{"data":null,"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion> */}
+</AccordionGroup>
+
+### Step 5: Memory Operations
+
+This is where the magic happens. Memobase extracts and stores memories for each user.
+
+1.  **`flush`**: User data is held in a buffer. If the buffer gets too large or remains idle, it gets processed. You can also trigger this manually.
+
+<Accordion title="Flush (e.g., after a chat session ends)">
+<CodeGroup>
+
+```python Python
+u.flush() # async
+u.flush(sync=True) # sync
+```
+
+```typescript Node
+await user.flush(BlobType.Enum.chat)
+```
+
+{/* ```go Go
+err := user.Flush(blob.ChatType, false)
+``` */}
+
+```bash cURL
+curl -X POST "$YOUR_PROJECT_URL/api/v1/users/buffer/{uid}/chat" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```json Output
+{"data":null,"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion>
+
+{/* 2.  **`profile`**: Get the memory profile of a user. */}
+
+{/* <Accordion title="Get User Profile">
+<CodeGroup>
+
+```python Python
+u.profile()
+```
+
+```typescript Node
+const profiles = await user.profile()
+```
+
+```go Go
+profiles, err := user.Profile(nil)
+```
+
+```bash cURL
+curl -X GET "$YOUR_PROJECT_URL/api/v1/users/profile/{uid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```json Output
+{"data":{"profiles":[ {"content":"Gus", "attributes":{}}, ... ]},"errno":0,"errmsg":""}
+```
+</CodeGroup>
+</Accordion> */}
+
+2.  Get Personalized Context:
+
+<Accordion title="context API">
+<CodeGroup>
+
+```python Python
+u.context()
+```
+
+```typescript Node
+const context = await user.context();
+```
+{/* 
+```go Go
+context, err := user.Context(nil)
+``` */}
+
+```bash cURL
+curl -X GET "$YOUR_PROJECT_URL/api/v1/users/context/{uid}" \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+```
+
+```txt Output
+# Memory
+Unless the user has relevant queries, do not actively mention those memories in the conversation.
+## User Background:
+- basic_info:name: Gus
+- basic_info:location: San Francisco
+...
+
+## Latest Events:
+- Gus went to the gym [mentioned on 2024-01-02]
+- Gus had a coffee with his friend [mentioned on 2024-01-01]
+...
+```
+</CodeGroup>
+</Accordion>
+
+3. Pack the context into your system prompt:
+<Accordion title="Insert personalized contex">
+
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+
+client = OpenAI(api_key=YOUR_API_KEY)
+
+SYSTEM_PROMPT = f"""You're a helpful assistant.
+Your job is to ...
+
+Below is the user's memory:
+{context}"""
+
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": "Who'am I?s"}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+```txt Output
+You're Gus! How can I help you today?
+```
+</CodeGroup>
+</Accordion>
+
+
+## Memobase Backend
+We offer an [open-source solution](https://github.com/memodb-io/memobase) with a Docker backend to launch your own instance.
+You can use `docker-compose` to launch the backend [in one command](https://github.com/memodb-io/memobase/blob/main/src/server/readme.md#get-started).
+
+
+## Memobase Cloud
+We also offer a [hosted cloud service](https://www.memobase.io/), with free tier and nice dashboard.
+
+<Frame caption="Memobase Cloud Dashboard">
+  <video
+  autoPlay
+  muted
+  loop
+  playsInline
+  src="https://github.com/user-attachments/assets/eb2eea30-48bc-4714-9706-e417ae1931df"
+></video>
+</Frame>

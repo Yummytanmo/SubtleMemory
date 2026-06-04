@@ -1,0 +1,36 @@
+# Human baseline configuration.
+#
+# The web app writes answer_results.json directly; this config exists so the
+# normal evaluation CLI can run the same llm_judge evaluate stage.
+
+name: "human-baseline-oracle-sessions"
+version: "1.0"
+description: "Single-human SubtleMemory persona0 baseline with oracle-scoped session transcripts"
+
+adapter: "no_context"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+semantic_chunk_policy: "none"
+transport_batch_policy: "none"
+
+num_workers: 1
+
+llm:
+  provider: "openai"
+  model: "not-used-for-human-baseline"
+  api_key: ""
+  base_url: ""
+  temperature: 0
+  max_tokens: 1
+
+search:
+  mode: "api"
+  num_workers: 1
+
+answer:
+  num_workers: 1
+  max_retries: 1
+
+readiness:
+  budget_seconds: 0
+  poll_interval_seconds: 0

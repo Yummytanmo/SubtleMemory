@@ -1,0 +1,60 @@
+# Memos System Configuration
+
+name: "memos"
+version: "1.0"
+description: "Memos"
+
+adapter: "memos"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+semantic_chunk_policy: "native_system"
+transport_batch_policy: "batch_messages"
+
+# Memos API configuration
+api_url: "https://memos.memtensor.cn/api/openmem/v1"
+api_key: "${MEMOS_KEY}"
+trust_env: true  # Let aiohttp use http_proxy/https_proxy from the shell environment
+batch_size: 10  # Number of messages to send per batch (default)
+max_retries: 5
+
+# Rate limiting (Memos has 10 requests/second limit)
+request_interval: 0.1  # Seconds to wait after each API call (10 req/s = 0.1s)
+
+# Concurrency configuration
+num_workers: 1  # Process conversations sequentially due to rate limit
+
+# Dataset-specific overrides
+# Configuration overrides for specific datasets
+dataset_overrides:
+  longmemeval:
+    batch_size: 6  # LongMemEval has large data, use smaller batch_size
+
+# ⏰ Post-Add Wait: Wait for background index build to complete (if needed)
+# Online API systems are usually asynchronous, so it takes time to build the index
+post_add_wait_seconds: 180  # Wait 180 seconds before starting search
+readiness:
+  budget_seconds: 180
+  poll_interval_seconds: 10
+
+
+# LLM configuration (for answer generation)
+llm:
+  provider: "openai"
+  model: "gpt-4o-mini"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+# Search configuration
+search:
+  mode: api
+  top_k: 20
+  readback:
+    include_preferences: true
+    order: session_then_time
+
+# Answer configuration
+answer:
+  subtlememory_prompt_key: "v2"
+  max_retries: 3

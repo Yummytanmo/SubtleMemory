@@ -1,0 +1,17 @@
+---
+title: Customizing Event Summaries
+---
+
+For each event, Memobase generates a concise summary of the recent user interaction. This summary serves as the primary input for the subsequent extraction of profile updates and event tags, making its quality crucial for the overall effectiveness of the memory system.
+
+Memobase allows you to customize the prompt used for generating these summaries, giving you greater control over the focus and quality of the extracted information.
+
+## Customizing the Summary Prompt
+
+You can add a custom instruction to the summary generation process via the `event_theme_requirement` field in your `config.yaml` file. For example, if you want the summary to focus on the user's personal information rather than their instructions to the AI, you can configure it as follows:
+
+```yaml config.yaml
+event_theme_requirement: "Focus on the user's personal information and feelings, not their direct commands or questions."
+```
+
+This allows you to fine-tune the event summaries to better suit the specific needs of your application.

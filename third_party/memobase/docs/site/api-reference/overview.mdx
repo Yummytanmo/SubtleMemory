@@ -1,0 +1,69 @@
+# Memobase API Overview
+
+Memobase provides a powerful set of APIs for integrating user profile-based memory capabilities into your GenAI applications. Our APIs are designed to help your AI remember users through efficient memory management and profile generation.
+
+## Key Features
+
+- **User Memory Management**: Create, retrieve, update, and delete user memories with ease
+- **Profile Generation**: Automatically generate user profiles from conversations and interactions
+- **Buffer System**: Efficient memory processing with buffer zones for recent interactions
+- **Customizable Profiles**: Define the aspects you want Memobase to collect about your users
+- **Secure Authentication**: API token-based access control for your data
+
+## API Structure
+
+Our API is organized into several main categories:
+
+1. **User APIs**: Manage user entities and their data
+   - Create and manage users
+   - Update user information
+   - Delete user accounts
+
+2. **Data APIs**: Handle data operations
+   - Insert blobs
+   - Get blobs
+   - Delete blobs
+   - Get all blobs
+
+3. **Profile APIs**: Access and manage user profiles
+   - Get user profiles
+   - Delete specific profiles
+   - Customize profile generation
+
+## Authentication
+
+All API requests require authentication using Bearer token authentication. Include your API token in the Authorization header of each request:
+
+```http
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+## Getting Started
+
+To begin using the Memobase API, you'll need to:
+
+1. Set up your Memobase backend server
+   - Default URL: `http://localhost:8019`
+   - Default token: `secret`
+
+2. Make your first API call:
+   ```python
+   from memobase import MemoBaseClient
+   
+   mb = MemoBaseClient("http://localhost:8019", "secret")
+   assert mb.ping()
+   ```
+
+3. Start exploring the APIs!
+
+
+## Data Processing
+
+By default, Memobase processes and removes raw memory blobs after generating profiles. This ensures:
+- Efficient storage usage
+- Privacy-focused data handling
+- Relevant information extraction
+
+You can customize this behavior through configuration settings.
+
+For detailed API endpoint documentation, explore the specific API sections in this documentation.

@@ -1,0 +1,112 @@
+---
+title: Using Memobase with Ollama
+---
+
+> [Full Code](https://github.com/memodb-io/memobase/tree/dev/assets/tutorials/ollama%2Bmemobase)
+
+Memobase supports any OpenAI-compatible LLM provider as its backend. This tutorial demonstrates how to use [Ollama](https://ollama.com/) to run a local LLM for both the Memobase server and your chat application.
+
+## Setup
+
+### 1. Configure Ollama
+
+-   [Install Ollama](https://ollama.com/download) on your local machine.
+-   Verify the installation by running `ollama -v`.
+-   Pull a model to use. For this example, we'll use `qwen2.5:7b`.
+    ```bash
+    ollama pull qwen2.5:7b
+    ```
+
+### 2. Configure Memobase
+
+To use a local LLM provider with the Memobase server, you need to modify your `config.yaml` file.
+
+<Tip>Learn more about [`config.yaml`](/references/cloud_config).</Tip>
+
+Set the following fields to point to your local Ollama instance:
+
+```yaml config.yaml
+llm_api_key: ollama
+llm_base_url: http://host.docker.internal:11434/v1
+best_llm_model: qwen2.5:7b
+```
+
+**Note**: Since the Memobase server runs in a Docker container, we use `host.docker.internal` to allow it to access the Ollama server running on your local machine at port `11434`.
+
+## Code Breakdown
+
+This example uses Memobase's [OpenAI Memory Patch](/practices/openai) for a clear demonstration.
+
+### Client Initialization
+
+First, we set up the OpenAI client to point to our local Ollama server and then apply the Memobase memory patch.
+
+```python
+from memobase import MemoBaseClient
+from openai import OpenAI
+from memobase.patch.openai import openai_memory
+
+# Point the OpenAI client to the local Ollama server
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama",
+)
+
+# Initialize the Memobase client
+mb_client = MemoBaseClient(
+    project_url="http://localhost:8019", # Assuming local Memobase server
+    api_key="secret",
+)
+
+# Apply the memory patch
+client = openai_memory(client, mb_client)
+```
+
+After patching, your OpenAI client is now stateful. It will automatically manage memory for each user, recalling information from past conversations.
+
+### Chat Function
+
+Next, we create a chat function that uses the patched client. The key is to pass a `user_id` to trigger the memory functionality.
+
+```python
+def chat(message, user_id=None, close_session=False):
+    print(f"Q: {message}")
+    
+    response = client.chat.completions.create(
+        messages=[{"role": "user", "content": message}],
+        model="qwen2.5:7b",
+        stream=True,
+        user_id=user_id, # Pass user_id to enable memory
+    )
+    
+    # Display the response
+    for chunk in response:
+        if chunk.choices[0].delta.content:
+            print(chunk.choices[0].delta.content, end="", flush=True)
+    print()
+
+    # Flush the memory buffer at the end of a session
+    if close_session and user_id:
+        client.flush(user_id)
+```
+
+### Testing the Memory
+
+Now, you can test the difference between a stateless and a stateful conversation:
+
+```python
+# --- Without Memory ---
+print("-- Ollama without memory --")
+chat("My name is Gus.")
+chat("What is my name?") # The model won't know
+
+# --- With Memory ---
+print("\n--- Ollama with memory ---")
+user = "gus_123"
+chat("My name is Gus.", user_id=user, close_session=True)
+
+# In a new conversation, the model remembers
+chat("What is my name?", user_id=user)
+```
+
+For the complete code, see the [full example on GitHub](https://github.com/memodb-io/memobase/tree/dev/assets/tutorials/ollama%2Bmemobase).

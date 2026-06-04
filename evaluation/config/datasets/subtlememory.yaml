@@ -1,0 +1,30 @@
+# SubtleMemory Dataset Configuration
+name: "subtlememory"
+version: "1.0"
+description: "Case-based persona benchmark converted into LoCoMo-style evaluation format"
+
+# Memory language setting (overrides MEMORY_LANGUAGE env var)
+memory_language: "en"
+
+# Data configuration
+data:
+  path: "subtlememory"  # Relative to evaluation/data/, matching other dataset configs
+  format: "subtlememory"
+
+# Evaluation configuration
+evaluation:
+  type: "llm_judge"
+
+  llm:
+    provider: "openai"
+    model: "${JUDGE_LLM_MODEL:gemini-3.1-pro-preview-thinking}"
+    api_key: "${JUDGE_LLM_API_KEY}"
+    base_url: "${JUDGE_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+
+  num_runs: 1
+  num_workers: 32
+  max_retries: 3
+  retry_base_seconds: 1
+  retry_max_seconds: 8
+  checkpoint_interval: 50
+  filter_category: []

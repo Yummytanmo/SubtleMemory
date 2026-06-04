@@ -1,0 +1,133 @@
+---
+title: Building a Voice Agent with LiveKit and Memobase
+---
+
+> [Full Code](https://github.com/memodb-io/memobase/tree/dev/assets/tutorials/livekit%2Bmemobase)
+
+This tutorial demonstrates how to build a voice agent with long-term memory using Memobase and LiveKit. This combination is ideal for applications like AI companions, customer support bots, and more.
+
+## Setup
+
+1.  **Get API Keys**:
+    -   **Memobase**: Sign up at [Memobase](https://www.memobase.io/en) or [run a local server](/references/local_config).
+    -   **LiveKit**: Get your `LIVEKIT_URL`, `API_KEY`, and `API_SECRET` from the [LiveKit Cloud Console](https://cloud.livekit.io/).
+    -   **Deepgram**: Get your `DEEPGRAM_API_KEY` from the [Deepgram Console](https://console.deepgram.com/).
+
+2.  **Environment Variables**: Set up your environment variables.
+
+    ```bash
+    OPENAI_API_KEY="your_openai_api_key"
+    DEEPGRAM_API_KEY="your_deepgram_api_key"
+    LIVEKIT_URL="your_livekit_url"
+    LIVEKIT_API_KEY="your_livekit_api_key"
+    LIVEKIT_API_SECRET="your_livekit_api_secret"
+    MEMOBASE_URL="https://api.memobase.io"
+    MEMOBASE_API_KEY="your_memobase_api_key"
+    ```
+
+3.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Code Breakdown
+
+The full code is available [here](https://github.com/memodb-io/memobase/tree/dev/assets/tutorials/livekit%2Bmemobase/livekit_example.py). We will be using the [LiveKit Agents SDK v1.0](https://docs.livekit.io/agents/build/).
+
+The core of the integration involves subclassing the `livekit.agents.Agent` class and overriding the `llm_node` method to inject memory context from Memobase.
+
+### Agent Initialization
+
+First, we initialize the Memobase client and define our custom agent class.
+
+```python
+import os
+from dotenv import load_dotenv
+from livekit.agents import Agent, llm
+from memobase import AsyncMemoBaseClient, ChatBlob
+from memobase.utils import string_to_uuid
+
+load_dotenv()
+mb_client = AsyncMemoBaseClient(
+    api_key=os.getenv("MEMOBASE_API_KEY"), project_url=os.getenv("MEMOBASE_URL")
+)
+
+class RAGEnrichedAgent(Agent):
+    def __init__(self) -> None:
+        super().__init__(
+            instructions="You are a warm-hearted partner who remembers past interactions.",
+        )
+        self.user_name = os.getenv("MEMOBASE_USER_NAME", "test_user")
+        self.chat_log_index = 1
+```
+
+### Injecting Memory
+
+Next, we override the `llm_node` method. This method is called just before the chat history is sent to the LLM. Here, we will retrieve the user's memory from Memobase and add it to the system prompt.
+
+```python
+async def llm_node(
+    self,
+    chat_ctx: llm.ChatContext,
+    # ... other params
+) -> AsyncIterable[llm.ChatChunk]:
+    # Ensure Memobase is reachable
+    assert await mb_client.ping(), "Memobase is not reachable"
+    
+    # Get or create the user in Memobase
+    user = await mb_client.get_or_create_user(string_to_uuid(self.user_name))
+
+    # Insert new messages into memory
+    if len(chat_ctx.items) > self.chat_log_index:
+        new_messages = chat_ctx.items[self.chat_log_index : len(chat_ctx.items) - 1]
+        if len(new_messages):
+            blob = ChatBlob(
+                messages=[
+                    {"role": m.role, "content": m.content[0]}
+                    for m in new_messages
+                    if m.role in ["user", "assistant"]
+                ]
+            )
+            await user.insert(blob)
+            await user.flush()
+            self.chat_log_index = len(chat_ctx.items) - 1
+
+    # Retrieve memory context and add to chat history
+    rag_context: str = await user.context(max_token_size=500)
+    chat_ctx.add_message(content=rag_context, role="system")
+    
+    # Call the default LLM node
+    return Agent.default.llm_node(self, chat_ctx, tools, model_settings)
+```
+
+The `rag_context` string will contain the user's [profile](/features/profile/) and recent [events](/features/event/), formatted and ready to be used by the LLM.
+
+### Running the Agent
+
+Finally, we set up the entry point to run the agent.
+
+```python
+async def entrypoint(ctx: JobContext):
+    # ... (connect to room, set up STT, TTS, etc.)
+    await session.start(
+        agent=RAGEnrichedAgent(),
+        # ...
+    )
+
+if __name__ == "__main__":
+    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
+```
+
+To run the code, first download the necessary assets:
+```bash
+python livekit_example.py download-files
+```
+
+Then, start the agent:
+```bash
+python livekit_example.py console
+```
+
+You can now have a conversation with the voice agent. It will remember information you provide across different sessions.
+
+

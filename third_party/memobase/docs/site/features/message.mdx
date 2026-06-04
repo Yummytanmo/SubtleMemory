@@ -1,0 +1,47 @@
+---
+title: Customizing Chat Messages
+---
+
+Memobase builds user memories from the chat interactions you provide. However, simple `user` and `assistant` roles are not always sufficient to capture the full context. Memobase allows you to add custom metadata to your messages to handle more complex scenarios.
+
+## Custom Timestamps
+
+It's important to distinguish between two types of timestamps in Memobase:
+
+-   **External Timestamp**: The time a memory is stored or updated in the database.
+-   **Internal Timestamp**: The time an event actually occurred according to the content of the memory itself (e.g., a birthday, a travel date).
+
+The internal timestamp is often more critical as it directly influences the AI's understanding and responses. By default, Memobase assumes the insertion time is the time the message occurred. You can override this by providing a `created_at` field.
+
+This is useful for importing historical data or for applications set in fictional timelines.
+
+```python
+from memobase import MemoBaseClient, ChatBlob
+
+client = MemoBaseClient(api_key="your_api_key")
+user = client.get_user(client.add_user())
+
+# This message occurred in a fictional future year
+messages = ChatBlob(messages=[
+    dict(role="user", content="I am starting a rebellion.", created_at="Year 32637")
+])
+
+user.insert(messages)
+```
+
+Memobase will process this chat according to the provided timestamp, resulting in a memory like: `"In the year 32637, the user started a rebellion."`
+
+You can use any date or time format; Memobase will extract the time at the appropriate granularity.
+
+## Character Aliases
+
+For more complex interactions, such as multi-character role-playing, you can assign names or `alias` values to the `user` and `assistant` roles.
+
+```python
+messages = ChatBlob(messages=[
+    dict(role="user", content="I wish to declare war.", alias="The Emperor"),
+    dict(role="assistant", content="Perhaps you should rest instead.", alias="The Advisor")
+])
+```
+
+By providing aliases, you give Memobase the context to create more accurate and personalized memories, such as: `"The Emperor wished to declare war, but The Advisor suggested rest instead."`

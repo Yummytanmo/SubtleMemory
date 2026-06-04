@@ -1,0 +1,14 @@
+---
+title: 'Get Project Users'
+openapi: get /api/v1/project/users
+---
+
+Get the users of a project with various filtering and ordering options.
+
+This endpoint allows you to:
+- Search users by username
+- Order results by different fields (updated_at, profile_count, event_count)
+- Control sort direction (ascending or descending)
+- Paginate results with limit and offset
+
+The response includes user data along with their profile count and event count for better project insights. 

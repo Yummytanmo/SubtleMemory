@@ -1,0 +1,24 @@
+---
+title: Async Python Client
+---
+
+Memobase also provides an async client in `python` SDK, it just the same as the sync client, but every method is async:
+```python
+from memobase import AsyncMemobaseClient
+
+client = AsyncMemobaseClient(api_key="your_api_key")
+
+async def main():
+    assert await client.ping()
+    #...
+    
+    # get user context
+    u = await client.get_user(UID)
+    print(await u.context())
+
+    # get user profile
+    print(await u.profile())
+
+    # get user events
+    print(await u.event(topk=10, max_token_size=1000))
+```

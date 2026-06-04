@@ -1,0 +1,55 @@
+# Memobase System Configuration
+
+name: "memobase"
+version: "1.0"
+description: "Memobase REST API"
+
+adapter: "memobase"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+semantic_chunk_policy: "native_system"
+transport_batch_policy: "session_chat_blobs"
+
+api_url: "${MEMOBASE_PROJECT_URL:http://localhost:8019/api/v1}"
+api_key: "${MEMOBASE_API_KEY:secret}"
+uuid_user_ids: true
+batch_size: "${MEMOBASE_BATCH_SIZE:20}"
+max_retries: "${MEMOBASE_MAX_RETRIES:3}"
+request_timeout_seconds: "${MEMOBASE_REQUEST_TIMEOUT_SECONDS:60}"
+add_wait_process: "${MEMOBASE_ADD_WAIT_PROCESS:false}"
+incremental_flush_every_chunks: "${MEMOBASE_INCREMENTAL_FLUSH_EVERY_CHUNKS:0}"
+incremental_flush_budget_seconds: "${MEMOBASE_INCREMENTAL_FLUSH_BUDGET_SECONDS:900}"
+incremental_flush_poll_interval_seconds: "${MEMOBASE_INCREMENTAL_FLUSH_POLL_INTERVAL_SECONDS:10}"
+readback_page_size: 100
+
+num_workers: 1
+
+readiness:
+  budget_seconds: "${MEMOBASE_READINESS_BUDGET_SECONDS:1800}"
+  poll_interval_seconds: "${MEMOBASE_READINESS_POLL_INTERVAL_SECONDS:10}"
+
+llm:
+  provider: "openai"
+  model: "${ANSWER_LLM_MODEL:gpt-4o-mini}"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+search:
+  mode: api
+  backend: "${MEMOBASE_SEARCH_BACKEND:context}"
+  top_k: 20
+  context_max_token_size: "${MEMOBASE_CONTEXT_MAX_TOKEN_SIZE:3000}"
+  event_similarity_threshold: "${MEMOBASE_EVENT_SIMILARITY_THRESHOLD:0.2}"
+  fill_window_with_events: "${MEMOBASE_FILL_WINDOW_WITH_EVENTS:true}"
+  profile_event_ratio: "${MEMOBASE_PROFILE_EVENT_RATIO}"
+  full_profile_and_only_search_event: "${MEMOBASE_FULL_PROFILE_AND_ONLY_SEARCH_EVENT}"
+  time_range_in_days: "${MEMOBASE_TIME_RANGE_IN_DAYS}"
+  require_event_summary: "${MEMOBASE_REQUIRE_EVENT_SUMMARY}"
+  readback_include_profiles: "${MEMOBASE_READBACK_INCLUDE_PROFILES:true}"
+  event_gist_similarity_threshold: "${MEMOBASE_EVENT_GIST_SIMILARITY_THRESHOLD:0.2}"
+
+answer:
+  subtlememory_prompt_key: "v1"
+  max_retries: 3

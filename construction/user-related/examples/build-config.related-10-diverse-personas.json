@@ -1,0 +1,19 @@
+{
+  "input_dir": "data/personamem-raw",
+  "persona_ids": [
+    0,
+    334,
+    351,
+    341,
+    92,
+    637,
+    45,
+    996,
+    135,
+    144
+  ],
+  "seed": 42,
+  "qa_mode": "task",
+  "qa_question_count": 2,
+  "dry_run": false
+}

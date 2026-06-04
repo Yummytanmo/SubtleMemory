@@ -1,0 +1,15 @@
+{
+  "id": "openclaw-session-memory-readback",
+  "kind": "lifecycle",
+  "name": "OpenClaw Session Memory Readback Facade",
+  "description": "Question-scoped readback context facade for evaluation",
+  "version": "0.0.1",
+  "openclaw": {
+    "extensions": ["./index.ts"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-06-03T15:44:46.788495+00:00",
+  "dataset": "SubtleMemory",
+  "publicDataPolicy": "Aggregate result metrics only. No case-level questions, answers, gold labels, judge rationales, or local artifact paths are exported.",
+  "metrics": {
+    "all": "All",
+    "complementary": "Complementary",
+    "multiEvidence": "Multi-evidence",
+    "anyOne": "Any-one",
+    "nuanced": "Nuanced",
+    "temporal": "Temporal",
+    "contextual": "Contextual",
+    "contradictory": "Contradictory"
+  },
+  "assets": [
+    "data_construction.pdf",
+    "data_construction.png",
+    "hf-logo.svg",
+    "arxiv-logo.svg"
+  ],
+  "dataFiles": [
+    "leaderboard.json",
+    "integration_effect.json",
+    "diagnostic_waterfall.json",
+    "manifest.json"
+  ]
+}

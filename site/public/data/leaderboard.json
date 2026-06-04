@@ -1,0 +1,680 @@
+{
+  "generatedAt": "2026-06-03T15:03:49.450167+00:00",
+  "metricLabels": {
+    "all": "All",
+    "complementary": "Complementary",
+    "multiEvidence": "Multi-evidence",
+    "anyOne": "Any-one",
+    "nuanced": "Nuanced",
+    "temporal": "Temporal",
+    "contextual": "Contextual",
+    "contradictory": "Contradictory"
+  },
+  "rows": [
+    {
+      "id": "main-table--gpt-5.4--mem0--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "mem0",
+      "methodLabel": "Mem0",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 68.99,
+        "complementary": 61.22,
+        "multiEvidence": 61.14,
+        "anyOne": 61.33,
+        "nuanced": 83.55,
+        "temporal": 81.31,
+        "contextual": 85.82,
+        "contradictory": 46.15
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--mem0--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "mem0",
+      "methodLabel": "Mem0",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 64.91,
+        "complementary": 58.17,
+        "multiEvidence": 57.82,
+        "anyOne": 58.67,
+        "nuanced": 79.72,
+        "temporal": 80.05,
+        "contextual": 79.38,
+        "contradictory": 40.58
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--memos--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "memos",
+      "methodLabel": "MemOS",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 56.83,
+        "complementary": 54.02,
+        "multiEvidence": 51.18,
+        "anyOne": 58.0,
+        "nuanced": 73.98,
+        "temporal": 70.2,
+        "contextual": 77.84,
+        "contradictory": 23.87
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--memos--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "memos",
+      "methodLabel": "MemOS",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 52.23,
+        "complementary": 52.91,
+        "multiEvidence": 48.82,
+        "anyOne": 58.67,
+        "nuanced": 68.37,
+        "temporal": 66.92,
+        "contextual": 69.85,
+        "contradictory": 18.04
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--evermemos--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "evermemos",
+      "methodLabel": "EverMemOS",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 68.13,
+        "complementary": 64.82,
+        "multiEvidence": 63.51,
+        "anyOne": 66.67,
+        "nuanced": 84.57,
+        "temporal": 81.82,
+        "contextual": 87.37,
+        "contradictory": 37.14
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--evermemos--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "evermemos",
+      "methodLabel": "EverMemOS",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 60.45,
+        "complementary": 56.23,
+        "multiEvidence": 53.08,
+        "anyOne": 60.67,
+        "nuanced": 78.57,
+        "temporal": 75.51,
+        "contextual": 81.7,
+        "contradictory": 26.79
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--mirix--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "mirix",
+      "methodLabel": "MIRIX",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 46.52,
+        "complementary": 49.58,
+        "multiEvidence": 47.87,
+        "anyOne": 52.0,
+        "nuanced": 60.46,
+        "temporal": 51.77,
+        "contextual": 69.33,
+        "contradictory": 14.59
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--mirix--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "mirix",
+      "methodLabel": "MIRIX",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 39.82,
+        "complementary": 42.38,
+        "multiEvidence": 38.86,
+        "anyOne": 47.33,
+        "nuanced": 51.91,
+        "temporal": 42.68,
+        "contextual": 61.34,
+        "contradictory": 12.2
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--a-mem--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "a-mem",
+      "methodLabel": "A-Mem",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 69.97,
+        "complementary": 59.56,
+        "multiEvidence": 58.29,
+        "anyOne": 61.33,
+        "nuanced": 84.18,
+        "temporal": 83.08,
+        "contextual": 85.31,
+        "contradictory": 50.4
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--a-mem--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "a-mem",
+      "methodLabel": "A-Mem",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 63.93,
+        "complementary": 55.68,
+        "multiEvidence": 58.29,
+        "anyOne": 52.0,
+        "nuanced": 80.36,
+        "temporal": 80.3,
+        "contextual": 80.41,
+        "contradictory": 37.67
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--memobase--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "memobase",
+      "methodLabel": "MemoBase",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 32.13,
+        "complementary": 33.52,
+        "multiEvidence": 26.54,
+        "anyOne": 43.33,
+        "nuanced": 38.9,
+        "temporal": 33.33,
+        "contextual": 44.59,
+        "contradictory": 16.71
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--memobase--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "memobase",
+      "methodLabel": "MemoBase",
+      "setting": "default_api",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 25.3,
+        "complementary": 25.48,
+        "multiEvidence": 16.11,
+        "anyOne": 38.67,
+        "nuanced": 32.53,
+        "temporal": 27.78,
+        "contextual": 37.37,
+        "contradictory": 10.08
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "openclaw",
+      "methodLabel": "OpenClaw",
+      "setting": "default_api",
+      "category": "Framework-native agent",
+      "metricValues": {
+        "all": 62.48,
+        "complementary": 59.56,
+        "multiEvidence": 62.56,
+        "anyOne": 55.33,
+        "nuanced": 81.63,
+        "temporal": 80.3,
+        "contextual": 82.99,
+        "contradictory": 25.46
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "openclaw",
+      "methodLabel": "OpenClaw",
+      "setting": "default_api",
+      "category": "Framework-native agent",
+      "metricValues": {
+        "all": 52.3,
+        "complementary": 45.43,
+        "multiEvidence": 46.45,
+        "anyOne": 44.0,
+        "nuanced": 70.66,
+        "temporal": 71.46,
+        "contextual": 69.85,
+        "contradictory": 20.69
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--metaclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "metaclaw",
+      "methodLabel": "MetaClaw",
+      "setting": "default_api",
+      "category": "Framework-native agent",
+      "metricValues": {
+        "all": 20.3,
+        "complementary": 17.45,
+        "multiEvidence": 15.64,
+        "anyOne": 20.0,
+        "nuanced": 22.19,
+        "temporal": 17.68,
+        "contextual": 26.8,
+        "contradictory": 19.1
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--metaclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "metaclaw",
+      "methodLabel": "MetaClaw",
+      "setting": "default_api",
+      "category": "Framework-native agent",
+      "metricValues": {
+        "all": 15.57,
+        "complementary": 13.3,
+        "multiEvidence": 10.9,
+        "anyOne": 16.67,
+        "nuanced": 17.35,
+        "temporal": 13.64,
+        "contextual": 21.13,
+        "contradictory": 14.06
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--mem0-openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "mem0-openclaw",
+      "methodLabel": "Mem0 + OpenClaw",
+      "setting": "default_api",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 71.29,
+        "complementary": 66.48,
+        "multiEvidence": 70.14,
+        "anyOne": 61.33,
+        "nuanced": 85.84,
+        "temporal": 86.36,
+        "contextual": 85.31,
+        "contradictory": 45.62
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--mem0-openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "mem0-openclaw",
+      "methodLabel": "Mem0 + OpenClaw",
+      "setting": "default_api",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 62.94,
+        "complementary": 59.0,
+        "multiEvidence": 60.19,
+        "anyOne": 57.33,
+        "nuanced": 76.28,
+        "temporal": 72.22,
+        "contextual": 80.41,
+        "contradictory": 38.99
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--memos-openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "memos-openclaw",
+      "methodLabel": "MemOS + OpenClaw",
+      "setting": "default_api",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 56.5,
+        "complementary": 61.22,
+        "multiEvidence": 57.35,
+        "anyOne": 66.67,
+        "nuanced": 73.85,
+        "temporal": 67.68,
+        "contextual": 80.15,
+        "contradictory": 15.92
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--memos-openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "memos-openclaw",
+      "methodLabel": "MemOS + OpenClaw",
+      "setting": "default_api",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 47.83,
+        "complementary": 45.71,
+        "multiEvidence": 40.76,
+        "anyOne": 52.67,
+        "nuanced": 64.16,
+        "temporal": 57.83,
+        "contextual": 70.62,
+        "contradictory": 15.92
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--evermemos-openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "evermemos-openclaw",
+      "methodLabel": "EverMemOS + OpenClaw",
+      "setting": "default_api",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 69.05,
+        "complementary": 67.04,
+        "multiEvidence": 66.82,
+        "anyOne": 67.33,
+        "nuanced": 87.5,
+        "temporal": 85.35,
+        "contextual": 89.69,
+        "contradictory": 32.63
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--evermemos-openclaw--default-api",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "evermemos-openclaw",
+      "methodLabel": "EverMemOS + OpenClaw",
+      "setting": "default_api",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 59.79,
+        "complementary": 56.51,
+        "multiEvidence": 55.92,
+        "anyOne": 57.33,
+        "nuanced": 78.44,
+        "temporal": 74.24,
+        "contextual": 82.73,
+        "contradictory": 24.14
+      }
+    },
+    {
+      "id": "main-table--gpt-5.4--oracle--oracle-context",
+      "table": "main_table",
+      "model": "gpt-5.4",
+      "method": "oracle",
+      "methodLabel": "Oracle",
+      "setting": "oracle_context",
+      "category": "Oracle reference",
+      "metricValues": {
+        "all": 85.41,
+        "complementary": 82.83,
+        "multiEvidence": 79.62,
+        "anyOne": 87.33,
+        "nuanced": 94.64,
+        "temporal": 95.45,
+        "contextual": 93.81,
+        "contradictory": 68.7
+      }
+    },
+    {
+      "id": "main-table--gpt-oss-120b--oracle--oracle-context",
+      "table": "main_table",
+      "model": "gpt-oss-120b",
+      "method": "oracle",
+      "methodLabel": "Oracle",
+      "setting": "oracle_context",
+      "category": "Oracle reference",
+      "metricValues": {
+        "all": 75.69,
+        "complementary": 80.61,
+        "multiEvidence": 81.99,
+        "anyOne": 78.67,
+        "nuanced": 89.8,
+        "temporal": 90.91,
+        "contextual": 88.66,
+        "contradictory": 41.64
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--mem0--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "mem0",
+      "methodLabel": "Mem0",
+      "setting": "perfect_retrieval",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 77.86,
+        "complementary": 78.39,
+        "multiEvidence": 75.36,
+        "anyOne": 82.67,
+        "nuanced": 90.18,
+        "temporal": 88.89,
+        "contextual": 91.49,
+        "contradictory": 51.72
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--memos--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "memos",
+      "methodLabel": "MemOS",
+      "setting": "perfect_retrieval",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 67.15,
+        "complementary": 71.19,
+        "multiEvidence": 63.98,
+        "anyOne": 81.33,
+        "nuanced": 82.4,
+        "temporal": 79.29,
+        "contextual": 85.57,
+        "contradictory": 31.56
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--evermemos--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "evermemos",
+      "methodLabel": "EverMemOS",
+      "setting": "perfect_retrieval",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 76.41,
+        "complementary": 78.39,
+        "multiEvidence": 76.78,
+        "anyOne": 80.67,
+        "nuanced": 90.94,
+        "temporal": 89.14,
+        "contextual": 92.78,
+        "contradictory": 44.3
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--mirix--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "mirix",
+      "methodLabel": "MIRIX",
+      "setting": "perfect_retrieval",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 59.99,
+        "complementary": 70.08,
+        "multiEvidence": 66.82,
+        "anyOne": 74.67,
+        "nuanced": 76.53,
+        "temporal": 68.69,
+        "contextual": 84.54,
+        "contradictory": 15.92
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--a-mem--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "a-mem",
+      "methodLabel": "A-Mem",
+      "setting": "perfect_retrieval",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 82.39,
+        "complementary": 81.16,
+        "multiEvidence": 77.73,
+        "anyOne": 86.0,
+        "nuanced": 92.98,
+        "temporal": 92.93,
+        "contextual": 93.04,
+        "contradictory": 61.54
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--memobase--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "memobase",
+      "methodLabel": "MemoBase",
+      "setting": "perfect_retrieval",
+      "category": "Standalone memory system",
+      "metricValues": {
+        "all": 36.66,
+        "complementary": 42.38,
+        "multiEvidence": 34.6,
+        "anyOne": 53.33,
+        "nuanced": 42.6,
+        "temporal": 37.37,
+        "contextual": 47.94,
+        "contradictory": 18.83
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--openclaw--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "openclaw",
+      "methodLabel": "OpenClaw",
+      "setting": "perfect_retrieval",
+      "category": "Framework-native agent",
+      "metricValues": {
+        "all": 81.21,
+        "complementary": 81.99,
+        "multiEvidence": 79.15,
+        "anyOne": 86.0,
+        "nuanced": 95.28,
+        "temporal": 95.2,
+        "contextual": 95.36,
+        "contradictory": 51.19
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--metaclaw--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "metaclaw",
+      "methodLabel": "MetaClaw",
+      "setting": "perfect_retrieval",
+      "category": "Framework-native agent",
+      "metricValues": {
+        "all": 36.47,
+        "complementary": 40.17,
+        "multiEvidence": 18.48,
+        "anyOne": 70.67,
+        "nuanced": 49.74,
+        "temporal": 47.22,
+        "contextual": 52.32,
+        "contradictory": 5.31
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--mem0-openclaw--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "mem0-openclaw",
+      "methodLabel": "Mem0 + OpenClaw",
+      "setting": "perfect_retrieval",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 71.55,
+        "complementary": 83.1,
+        "multiEvidence": 79.62,
+        "anyOne": 88.0,
+        "nuanced": 91.2,
+        "temporal": 90.15,
+        "contextual": 92.27,
+        "contradictory": 19.63
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--memos-openclaw--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "memos-openclaw",
+      "methodLabel": "MemOS + OpenClaw",
+      "setting": "perfect_retrieval",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 64.06,
+        "complementary": 75.9,
+        "multiEvidence": 69.19,
+        "anyOne": 85.33,
+        "nuanced": 81.51,
+        "temporal": 76.52,
+        "contextual": 86.6,
+        "contradictory": 16.45
+      }
+    },
+    {
+      "id": "perfect-retrieval-gpt5-4--gpt-5.4--evermemos-openclaw--perfect-retrieval",
+      "table": "perfect_retrieval_gpt5.4",
+      "model": "gpt-5.4",
+      "method": "evermemos-openclaw",
+      "methodLabel": "EverMemOS + OpenClaw",
+      "setting": "perfect_retrieval",
+      "category": "OpenClaw plugin memory",
+      "metricValues": {
+        "all": 76.94,
+        "complementary": 81.44,
+        "multiEvidence": 80.09,
+        "anyOne": 83.33,
+        "nuanced": 90.18,
+        "temporal": 89.39,
+        "contextual": 90.98,
+        "contradictory": 45.09
+      }
+    }
+  ]
+}

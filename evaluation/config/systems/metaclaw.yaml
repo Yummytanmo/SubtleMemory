@@ -1,0 +1,75 @@
+# MetaClaw native-memory configuration for SubtleMemory.
+#
+# This adapter keeps SubtleMemory's add -> finalize -> search -> answer -> evaluate
+# pipeline, but lets MetaClaw perform its own memory ingestion, recall, and
+# prompt injection internally.
+
+name: "metaclaw"
+version: "1.0"
+description: "MetaClaw native memory backend"
+
+adapter: "metaclaw"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+supported_datasets:
+  - "subtlememory"
+
+num_workers: 1
+
+metaclaw:
+  root: "${METACLAW_ROOT}"
+
+memory:
+  # Conversation isolation is logical: all conversations in a run share one
+  # MetaClaw SQLite store, while each conversation gets a distinct run-scoped
+  # memory_scope.
+  isolation: "conversation_scope"
+  physical_store: "shared_run_sqlite"
+  scope_prefix: "evaluation"
+  retrieval_mode: "hybrid"
+  use_embeddings: false
+  embedding_mode: "hashing"
+  auto_consolidate: false
+  flush_every: 50
+  search_top_k: 8
+  max_injected_tokens: 2400
+
+llm:
+  provider: "openai"
+  model: "${ANSWER_LLM_MODEL:gpt-4o-mini}"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://api.openai.com/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+search:
+  num_workers: 1
+  top_k: 8
+  max_context_memories: 8
+  max_context_chars: 18000
+
+answer:
+  num_workers: 1
+  checkpoint_interval: 10
+  max_retries: 2
+  timeout_seconds: 240
+  max_context_tokens: 20000
+  # Native answer path: pass a unified SubtleMemory question prompt into
+  # MetaClaw's chat-completions handler and let MetaClaw perform memory
+  # recall/injection internally.
+  metaclaw_prompt_key: "answer_prompt_subtlememory_metaclaw_v2"
+
+readiness:
+  budget_seconds: 0
+  poll_interval_seconds: 0
+
+dataset_overrides:
+  subtlememory:
+    search:
+      num_workers: 1
+      top_k: 8
+    answer:
+      num_workers: 1
+      checkpoint_interval: 10
+      max_retries: 2
+      timeout_seconds: 240

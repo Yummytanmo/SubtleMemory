@@ -1,0 +1,51 @@
+# MIRIX native-agent configuration for SubtleMemory.
+
+name: "mirix"
+version: "1.0"
+description: "MIRIX native ingestion plus MIRIX native agent answering"
+
+adapter: "mirix"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+supported_datasets:
+  - "subtlememory"
+
+num_workers: 1
+
+mirix:
+  root: "${MIRIX_ROOT:third_party/mirix}"
+  run_root: "./evaluation/results/mirix_runtime"
+  runtime_dir_template: "{conversation_id}"
+  config_path: "configs/mirix_gpt4o-mini.yaml"
+  agent_state_dirname: "agent_state"
+  sqlite_filename: "sqlite.db"
+
+llm:
+  provider: "openai"
+  model: "gpt-4o-mini"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+embedding:
+  provider: "openai"
+  model: "text-embedding-3-small"
+  api_key: "${EMBEDDING_API_KEY}"
+  base_url: "${EMBEDDING_BASE_URL:https://api.openai.com/v1}"
+
+search:
+  mode: "api"
+  top_k: 20
+  num_workers: 1
+
+answer:
+  max_retries: 3
+  retry_delay_seconds: 0
+  num_workers: 4
+  checkpoint_interval: 10
+  timeout_seconds: 300
+
+readiness:
+  budget_seconds: 0
+  poll_interval_seconds: 0

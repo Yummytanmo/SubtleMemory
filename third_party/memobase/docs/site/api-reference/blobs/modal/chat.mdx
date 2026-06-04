@@ -1,0 +1,49 @@
+---
+title: 'ChatBlob'
+---
+
+ChatBlob is for user/AI messages. 
+Memobase will automatically understand and extract the messages into structured profiles.
+
+An example of ChatBlob is below:
+
+<Accordion title="Example to insert ChatBlob">
+<CodeGroup>
+```python Python
+from memobase import ChatBlob
+
+b = ChatBlob(messages=[
+    {"role": "user", "content": "Hello, how are you?"},
+    {
+        "role": "assistant", 
+        "content": "I'm fine, thank you!", 
+        "alias": "Her", 
+        "created_at": "2025-01-01"
+    },
+])
+
+
+u.insert(b)
+```
+```bash https
+curl -X POST "$PROJECT_URL/api/v1/blobs/insert/{uid}" \
+     -H "Authorization: Bearer $PROJECT_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{ "blob_type": "chat", "blob_data": { "messages": [ {"role": "user","content": "Hi, Im here again"}, {"role": "assistant", "content": "Hi, Gus! How can I help you?", "alias": "Her", "created_at": "2025-01-01"}] }}'
+```
+</CodeGroup>
+</Accordion>
+
+The message format is OpenAI Message format:
+```json
+{
+  "role": "user" | "assistant",
+  "content": "string",
+  "alias": "string, optional",
+  "created_at": "string, optional"
+}
+```
+- `role`: user or assistant
+- `content`: message content
+- `alias`: optional. You can set the name of the character(user or assistant), it will reflect in the memory profile.
+- `created_at`: optional. You can set the date of the message.

@@ -1,0 +1,114 @@
+---
+title: Retrieving the Memory Prompt
+---
+
+Memobase automatically extracts and structures various types of memories from user interactions, including:
+-   **User Profile**: Key-value attributes describing the user (e.g., name, location, preferences).
+-   **User Events**: Significant occurrences and interactions from the user's history.
+
+This collection of memories forms a user's personalized context. Memobase provides a powerful `context()` API to retrieve this information as a structured string, ready to be injected directly into your LLM prompts.
+
+### Basic Usage
+
+The simplest way to get a user's context is to call the `context()` method on a user object.
+
+<CodeGroup>
+```python Python
+from memobase import MemoBaseClient, ChatBlob
+
+# Initialize client and get/create a user
+client = MemoBaseClient(api_key="your_api_key")
+user = client.get_user(client.add_user(profile={"name": "Gus"}))
+
+# Insert data to generate memories
+user.insert(
+    ChatBlob(
+        messages=[
+            {"role": "user", "content": "I live in California."},
+            {"role": "assistant", "content": "Nice, I've heard it's sunny there!"}
+        ]
+    )
+)
+
+# Retrieve the default context prompt
+user_context = user.context()
+print(user_context)
+```
+
+```txt Output
+# Memory
+Unless the user has relevant queries, do not actively mention these memories in the conversation.
+
+## User Background:
+- basic_info:name: Gus
+- basic_info:location: California
+
+## Latest Events:
+- User mentioned living in California.
+```
+</CodeGroup>
+
+### Context-Aware Retrieval
+
+To make the retrieved context more relevant to the ongoing conversation, you can provide recent chat messages. Memobase will perform a semantic search to prioritize the most relevant historical events, rather than simply returning the most recent ones.
+
+<CodeGroup>
+```python Python
+# Continuing from the previous example...
+recent_chats = [
+    {"role": "user", "content": "What is my name?"}
+]
+
+# Get context relevant to the recent chat
+relevant_context = user.context(chats=recent_chats)
+print(relevant_context)
+```
+
+```txt Output
+# Memory
+...
+## User Background:
+- basic_info:name: Gus
+- basic_info:location: California
+
+## Latest Events:
+- User stated their name is Gus.
+- User previously mentioned being called John.
+```
+</CodeGroup>
+
+### Controlling Context Size
+
+You can manage the size and cost of your prompts by limiting the token count of the retrieved context using the `max_tokens` parameter.
+
+<CodeGroup>
+```python Python
+# Get a condensed context with a token limit
+compact_context = user.context(max_tokens=20)
+print(compact_context)
+```
+
+```txt Output
+# Memory
+...
+## User Background:
+- basic_info:name: Gus
+
+## Latest Events:
+- User mentioned living in California.
+```
+</CodeGroup>
+
+**Note**: The `max_tokens` limit applies to the profile and event content, not the final formatted string. If you use a large custom prompt template, the final output may still exceed the limit.
+
+### Advanced Filtering
+
+The `context()` API offers several parameters for fine-grained control:
+
+-   `prefer_topics`, `only_topics`: Prioritize or exclusively include certain profile topics.
+-   `max_subtopic_size`: Limit the number of sub-topics returned per topic.
+-   `profile_event_ratio`: Adjust the balance between profile and event information.
+-   `time_range_in_days`: Filter events to a specific time window.
+-   `customize_context_prompt`: Provide a custom template for the final output string.
+
+For a full list of parameters, refer to the [API Reference for `get_context`](/api-reference/prompt/get_context).

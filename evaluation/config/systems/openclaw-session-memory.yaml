@@ -1,0 +1,74 @@
+# OpenClaw session-memory configuration.
+#
+# The adapter is implemented in Python, writes OpenClaw-compatible transcripts,
+# and invokes OpenClaw's bundled session-memory handler to create markdown under
+# an isolated workspace. Finalize then enables memory-core and runs
+# `openclaw memory index --force` on that workspace.
+
+name: "openclaw-session-memory"
+version: "1.0"
+description: "OpenClaw session-memory markdown indexed by memory-core"
+
+adapter: "openclaw_session_memory"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+semantic_chunk_policy: "session_memory_markdown"
+transport_batch_policy: "offline_transcript_import"
+
+num_workers: 1
+
+openclaw:
+  root: "${OPENCLAW_ROOT}"
+  cli: "${OPENCLAW_CLI}"
+  base_config_path: "${OPENCLAW_CONFIG_PATH}"
+  memory_search_provider: "local"
+
+memory:
+  messages: 50
+  search_top_k: 50
+  min_score: 0.08
+
+llm:
+  provider: "openai"
+  model: "${ANSWER_LLM_MODEL:gpt-4o-mini}"
+  api: "openai-completions"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://api.openai.com/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+search:
+  num_workers: 1
+  top_k: 50
+
+answer:
+  num_workers: 2
+  checkpoint_interval: 10
+  max_retries: 2
+  openclaw_max_retries: 5
+  openclaw_retry_delay_seconds: 2
+  openclaw_agent_timeout_seconds: 210
+  openclaw_subprocess_timeout_seconds: 225
+  use_openclaw_agent: true
+  openclaw_agent_prompt_key: "answer_prompt_empty"
+  allow_llm_fallback: false
+  timeout_seconds: 1200
+
+readiness:
+  budget_seconds: 0
+  poll_interval_seconds: 0
+
+dataset_overrides:
+  subtlememory:
+    search:
+      num_workers: 1
+      top_k: 50
+    answer:
+      num_workers: 2
+      checkpoint_interval: 10
+      max_retries: 2
+      openclaw_max_retries: 5
+      openclaw_retry_delay_seconds: 2
+      openclaw_agent_timeout_seconds: 210
+      openclaw_subprocess_timeout_seconds: 225
+      timeout_seconds: 1200

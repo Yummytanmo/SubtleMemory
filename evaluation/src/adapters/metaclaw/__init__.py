@@ -1,0 +1,1 @@
+"""MetaClaw evaluation adapter."""

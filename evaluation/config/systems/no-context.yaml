@@ -1,0 +1,33 @@
+# No-context Baseline Configuration
+
+name: "no-context"
+version: "1.0"
+description: "Question-only baseline with no retrieved memory or conversation context"
+
+adapter: "no_context"
+benchmark_mode: "category1"
+inspection_strength: "strong"
+semantic_chunk_policy: "none"
+transport_batch_policy: "none"
+
+# No external memory system is written. Add/finalize/search are no-context no-ops.
+num_workers: 20
+
+llm:
+  provider: "openai"
+  model: "gpt-4o-mini"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+search:
+  num_workers: 20
+
+answer:
+  num_workers: 20
+  max_retries: 3
+
+readiness:
+  budget_seconds: 0
+  poll_interval_seconds: 0

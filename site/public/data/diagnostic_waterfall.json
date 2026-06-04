@@ -1,0 +1,400 @@
+{
+  "generatedAt": "2026-06-03T15:44:46.788495+00:00",
+  "model": "gpt-5.4",
+  "metrics": [
+    {
+      "key": "complementary",
+      "label": "Complementary"
+    },
+    {
+      "key": "nuanced",
+      "label": "Nuanced"
+    },
+    {
+      "key": "contradictory",
+      "label": "Contradictory"
+    },
+    {
+      "key": "overall",
+      "label": "Overall"
+    }
+  ],
+  "memoryPreservation": [
+    {
+      "system": "amem",
+      "systemLabel": "A-Mem",
+      "complementary": {
+        "pct": 91.64
+      },
+      "nuanced": {
+        "pct": 97.57
+      },
+      "contradictory": {
+        "pct": 83.78
+      },
+      "overall": {
+        "pct": 93.46
+      },
+      "rank": 1
+    },
+    {
+      "system": "openclaw",
+      "systemLabel": "OpenClaw",
+      "complementary": {
+        "pct": 92.98
+      },
+      "nuanced": {
+        "pct": 97.98
+      },
+      "contradictory": {
+        "pct": 71.04
+      },
+      "overall": {
+        "pct": 91.46
+      },
+      "rank": 2
+    },
+    {
+      "system": "mem0",
+      "systemLabel": "Mem0",
+      "complementary": {
+        "pct": 86.96
+      },
+      "nuanced": {
+        "pct": 94.07
+      },
+      "contradictory": {
+        "pct": 68.73
+      },
+      "overall": {
+        "pct": 87.38
+      },
+      "rank": 3
+    },
+    {
+      "system": "openclaw_evermemos_plugin",
+      "systemLabel": "EverMemOS + OpenClaw",
+      "complementary": {
+        "pct": 89.3
+      },
+      "nuanced": {
+        "pct": 93.13
+      },
+      "contradictory": {
+        "pct": 60.23
+      },
+      "overall": {
+        "pct": 85.69
+      },
+      "rank": 4
+    },
+    {
+      "system": "evermemos",
+      "systemLabel": "EverMemOS",
+      "complementary": {
+        "pct": 86.62
+      },
+      "nuanced": {
+        "pct": 93.26
+      },
+      "contradictory": {
+        "pct": 60.62
+      },
+      "overall": {
+        "pct": 85.23
+      },
+      "rank": 5
+    },
+    {
+      "system": "openclaw_mem0_plugin",
+      "systemLabel": "Mem0 + OpenClaw",
+      "complementary": {
+        "pct": 92.31
+      },
+      "nuanced": {
+        "pct": 94.07
+      },
+      "contradictory": {
+        "pct": 27.41
+      },
+      "overall": {
+        "pct": 80.38
+      },
+      "rank": 6
+    },
+    {
+      "system": "memos",
+      "systemLabel": "MemOS",
+      "complementary": {
+        "pct": 79.26
+      },
+      "nuanced": {
+        "pct": 84.91
+      },
+      "contradictory": {
+        "pct": 42.86
+      },
+      "overall": {
+        "pct": 75.23
+      },
+      "rank": 7
+    },
+    {
+      "system": "openclaw_memos_plugin",
+      "systemLabel": "MemOS + OpenClaw",
+      "complementary": {
+        "pct": 84.62
+      },
+      "nuanced": {
+        "pct": 83.83
+      },
+      "contradictory": {
+        "pct": 20.46
+      },
+      "overall": {
+        "pct": 71.38
+      },
+      "rank": 8
+    },
+    {
+      "system": "mirix",
+      "systemLabel": "MIRIX",
+      "complementary": {
+        "pct": 77.26
+      },
+      "nuanced": {
+        "pct": 78.84
+      },
+      "contradictory": {
+        "pct": 18.92
+      },
+      "overall": {
+        "pct": 66.54
+      },
+      "rank": 9
+    },
+    {
+      "system": "metaclaw",
+      "systemLabel": "MetaClaw",
+      "complementary": {
+        "pct": 45.15
+      },
+      "nuanced": {
+        "pct": 50.67
+      },
+      "contradictory": {
+        "pct": 4.63
+      },
+      "overall": {
+        "pct": 40.23
+      },
+      "rank": 10
+    },
+    {
+      "system": "memobase",
+      "systemLabel": "MemoBase",
+      "complementary": {
+        "pct": 44.48
+      },
+      "nuanced": {
+        "pct": 42.99
+      },
+      "contradictory": {
+        "pct": 21.62
+      },
+      "overall": {
+        "pct": 39.08
+      },
+      "rank": 11
+    }
+  ],
+  "retrievalGivenPreservation": [
+    {
+      "system": "openclaw_evermemos_plugin",
+      "systemLabel": "EverMemOS + OpenClaw",
+      "complementary": {
+        "pct": 78.65
+      },
+      "nuanced": {
+        "pct": 94.36
+      },
+      "contradictory": {
+        "pct": 67.95
+      },
+      "overall": {
+        "pct": 86.89
+      },
+      "rank": 1
+    },
+    {
+      "system": "evermemos",
+      "systemLabel": "EverMemOS",
+      "complementary": {
+        "pct": 78.76
+      },
+      "nuanced": {
+        "pct": 92.2
+      },
+      "contradictory": {
+        "pct": 71.97
+      },
+      "overall": {
+        "pct": 86.19
+      },
+      "rank": 2
+    },
+    {
+      "system": "openclaw_mem0_plugin",
+      "systemLabel": "Mem0 + OpenClaw",
+      "complementary": {
+        "pct": 75.72
+      },
+      "nuanced": {
+        "pct": 89.83
+      },
+      "contradictory": {
+        "pct": 71.83
+      },
+      "overall": {
+        "pct": 84.88
+      },
+      "rank": 3
+    },
+    {
+      "system": "mem0",
+      "systemLabel": "Mem0",
+      "complementary": {
+        "pct": 74.23
+      },
+      "nuanced": {
+        "pct": 89.11
+      },
+      "contradictory": {
+        "pct": 73.6
+      },
+      "overall": {
+        "pct": 83.27
+      },
+      "rank": 4
+    },
+    {
+      "system": "openclaw_memos_plugin",
+      "systemLabel": "MemOS + OpenClaw",
+      "complementary": {
+        "pct": 77.47
+      },
+      "nuanced": {
+        "pct": 86.66
+      },
+      "contradictory": {
+        "pct": 54.72
+      },
+      "overall": {
+        "pct": 82.33
+      },
+      "rank": 5
+    },
+    {
+      "system": "amem",
+      "systemLabel": "A-Mem",
+      "complementary": {
+        "pct": 70.44
+      },
+      "nuanced": {
+        "pct": 87.43
+      },
+      "contradictory": {
+        "pct": 71.89
+      },
+      "overall": {
+        "pct": 80.82
+      },
+      "rank": 6
+    },
+    {
+      "system": "memos",
+      "systemLabel": "MemOS",
+      "complementary": {
+        "pct": 74.68
+      },
+      "nuanced": {
+        "pct": 86.67
+      },
+      "contradictory": {
+        "pct": 55.86
+      },
+      "overall": {
+        "pct": 80.27
+      },
+      "rank": 7
+    },
+    {
+      "system": "memobase",
+      "systemLabel": "MemoBase",
+      "complementary": {
+        "pct": 65.41
+      },
+      "nuanced": {
+        "pct": 81.82
+      },
+      "contradictory": {
+        "pct": 64.29
+      },
+      "overall": {
+        "pct": 75.59
+      },
+      "rank": 8
+    },
+    {
+      "system": "openclaw",
+      "systemLabel": "OpenClaw",
+      "complementary": {
+        "pct": 69.78
+      },
+      "nuanced": {
+        "pct": 84.87
+      },
+      "contradictory": {
+        "pct": 34.24
+      },
+      "overall": {
+        "pct": 73.51
+      },
+      "rank": 9
+    },
+    {
+      "system": "mirix",
+      "systemLabel": "MIRIX",
+      "complementary": {
+        "pct": 64.5
+      },
+      "nuanced": {
+        "pct": 74.87
+      },
+      "contradictory": {
+        "pct": 40.82
+      },
+      "overall": {
+        "pct": 70.17
+      },
+      "rank": 10
+    },
+    {
+      "system": "metaclaw",
+      "systemLabel": "MetaClaw",
+      "complementary": {
+        "pct": 34.07
+      },
+      "nuanced": {
+        "pct": 26.6
+      },
+      "contradictory": {
+        "pct": 58.33
+      },
+      "overall": {
+        "pct": 29.25
+      },
+      "rank": 11
+    }
+  ]
+}

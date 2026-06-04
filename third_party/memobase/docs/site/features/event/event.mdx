@@ -1,0 +1,35 @@
+---
+title: Event Fundamentals
+---
+
+Memobase automatically tracks key events and memories from user interactions, creating a chronological record of their experiences.
+
+```python
+from memobase import MemoBaseClient, ChatBlob
+
+# Initialize the client
+client = MemoBaseClient(api_key="your_api_key")
+
+# Create a user and insert a chat message
+user = client.get_user(client.add_user())
+user.insert(
+    ChatBlob(
+        messages=[{"role": "user", "content": "My name is Gus"}]
+    )
+)
+
+# Retrieve the user's events
+print(user.event())
+```
+
+## Event Structure
+
+Each event object contains the following information:
+
+-   **Event Summary** (Optional): A concise summary of the user's recent interaction. Learn more about [Event Summaries](/features/event/event_summary).
+-   **Event Tags** (Optional): Semantic tags that categorize the event (e.g., `emotion::happy`, `goal::buy_a_house`). Learn how to [design custom tags](/features/event/event_tag).
+-   **Profile Delta** (Required): The specific profile slots that were created or updated during this event.
+-   **Created Time** (Required): The timestamp of when the event occurred.
+
+A detailed description of the event format can be found in the [API Reference](/api-reference/events/get_events).
+

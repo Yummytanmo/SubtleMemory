@@ -1,0 +1,90 @@
+---
+title: Best Practices & Tips
+---
+
+This guide provides tips for effectively using Memobase in your applications.
+
+## Configuring User Memory
+
+You can define the structure of user profiles by configuring topics and sub-topics in your `config.yaml` file. This tells Memobase what kind of information to track.
+
+```yaml
+- topic: "Gaming"
+  description: "Tracks the user's gaming preferences and achievements."
+  sub_topics:
+      - name: "FPS"
+      - name: "LOL"
+- topic: "Professional"
+  description: "Tracks the user's professional background."
+  sub_topics:
+    - name: "Industry"
+    - name: "Role"
+```
+
+Memobase uses this configuration to generate structured user profiles. Learn more about customization at [Profile Configuration](/features/profile/profile_config).
+
+## Integrating Memory into Prompts
+
+There are two primary ways to retrieve and use a user's memory.
+
+### Method 1: Profile API (Manual Assembly)
+
+The [Profile API](/api-reference/profiles/profile) returns a structured JSON object containing the user's profile data. You are responsible for formatting this JSON into a string and inserting it into your prompt.
+
+**Key Considerations:**
+-   **Context Length**: Control the token count of the memory context to manage cost and performance. Use `max_token_size` to set a hard limit and `max_subtopic_size` to limit the number of sub-topics per topic.
+-   **Topic Filtering**: Use `only_topics` to retrieve specific profile sections or `prefer_topics` to prioritize the most important information.
+
+### Method 2: Context API (Automated Assembly)
+
+The [Context API](/api-reference/prompt/get_context) returns a pre-formatted string containing both the user's profile and recent events, ready to be injected directly into your system prompt. It uses a template like this:
+
+```text
+# Memory
+Unless the user has relevant queries, do not actively mention those memories in the conversation.
+## User Background:
+{profile}
+
+## Latest Events:
+{event}
+```
+
+## Flushing the Memory Buffer
+
+Memobase uses a buffer to collect user interactions. A `flush` operation processes this buffer and updates the long-term memory. Flushing occurs automatically when:
+
+-   The buffer exceeds a certain size.
+-   The buffer has been idle for a set period.
+
+You can also trigger it manually with the `flush` API. It is best practice to call `flush` at the end of a user session or conversation.
+
+## User ID Management
+
+A single user in your application can correspond to multiple Memobase users. This is useful for creating segmented memories.
+
+-   **Example: AI Role-Playing**: If a user interacts with multiple AI agents (e.g., a history tutor and a creative writer), you can create a separate Memobase user for each agent. This keeps the memories for each role distinct.
+
+We recommend designing your system with a one-to-many mapping between your application's user ID and Memobase user IDs.
+
+## Enriching Conversation Data
+
+You can add metadata to the messages you insert to provide more context for memory extraction.
+
+-   **Speaker Alias**: Use `alias` to specify the name of the AI assistant in the conversation.
+    ```json
+    {
+        "role": "assistant",
+        "content": "Hi, nice to meet you, Gus!",
+        "alias": "HerAI"
+    }
+    ```
+-   **Timestamps**: Provide a `created_at` timestamp for each message so Memobase can build a timeline of events.
+    ```json
+    {
+        "role": "user",
+        "content": "Hello, I'm Gus",
+        "created_at": "2025-01-14T10:00:00Z"
+    }
+    ```
+
+See a full implementation in our [demo script](https://github.com/memodb-io/memobase/blob/main/assets/quickstart.py).

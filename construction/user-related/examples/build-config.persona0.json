@@ -1,0 +1,11 @@
+{
+  "input_dir": "data/personamem-raw",
+  "output_dir": "data/user-related/",
+  "persona_ids": [
+    0
+  ],
+  "seed": 42,
+  "qa_mode": "task",
+  "qa_question_count": 2,
+  "dry_run": false
+}

@@ -1,0 +1,58 @@
+---
+title: Configuring Profile Slots
+---
+
+Memobase allows for detailed customization of how profile slots are created and updated.
+
+## Instructing Profile Creation
+
+Memobase uses a `topic` and `sub_topics` structure to define a profile slot. For example:
+
+```yaml
+overwrite_user_profiles:
+    - topic: "work"
+      sub_topics:
+        - "company"
+        - "position"
+        - "department"
+```
+
+While this structure is often sufficient, you can provide additional `description` fields to give the AI more context and ensure it tracks the information you need with greater accuracy.
+
+```yaml
+overwrite_user_profiles:
+    - topic: "work"
+      sub_topics:
+        - name: "start_date"
+          description: "The user's start date at their current job, in YYYY-MM-DD format."
+```
+
+The `description` field is optional but highly recommended for achieving precise data extraction.
+
+## Instructing Profile Updates
+
+Memobase not only creates profile slots but also maintains them over time. When a user provides new information, Memobase must decide how to update the existing data.
+
+For example, if a user mentions a new job, the `work/start_date` slot needs to be updated:
+
+-   **Old Value**: `2020-01-01`
+-   **New Information**: User starts a new job in 2021.
+-   **Default Update**: The value is replaced with `2021-01-01`.
+
+You can control this update behavior by adding an `update_description` to the profile slot. For instance, if you wanted to keep a record of the user's *first-ever* job start date, you could configure it like this:
+
+```yaml
+overwrite_user_profiles:
+    - topic: "work"
+      sub_topics:
+        - name: "start_date"
+          description: "The user's start date at their current job, in YYYY-MM-DD format."
+          update_description: "Always keep the oldest start date. Do not update if a date already exists."
+```
+
+With this instruction, Memobase will preserve the original `start_date` instead of overwriting it.
+
+
+
+
+

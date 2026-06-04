@@ -1,0 +1,22 @@
+# Tiny QA-linked SubtleMemory slice for real readback smoke validation.
+name: "subtlememory_readback_smoke"
+version: "1.0"
+description: "Temporary two-session SubtleMemory slice for readback smoke runs"
+
+memory_language: "en"
+
+data:
+  path: "/tmp/everos_subtlememory_readback_smoke"
+  format: "subtlememory"
+
+evaluation:
+  type: "llm_judge"
+
+  llm:
+    provider: "openai"
+    model: "${JUDGE_LLM_MODEL:gemini-3.1-pro-preview-thinking}"
+    api_key: "${JUDGE_LLM_API_KEY}"
+    base_url: "${JUDGE_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+
+  num_runs: 1
+  filter_category: []

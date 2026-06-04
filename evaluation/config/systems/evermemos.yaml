@@ -1,0 +1,58 @@
+# EverMemOS (HTTP API) System Configuration
+name: "evermemos"
+version: "1.0"
+description: "EverMemOS via HTTP Memory API"
+
+adapter: "evermemos_api"
+benchmark_mode: "category1"
+inspection_strength: "medium"
+semantic_chunk_policy: "single_message_event"
+transport_batch_policy: "single_message_request"
+
+# EverMemOS API configuration
+# base_url can be either host base (https://api.evermind.ai) or full v1 endpoint (.../api/v1/memories)
+base_url: "${EVERMEMOS_API_URL:https://api.evermind.ai}"
+# Hosted API requires Bearer token in Authorization header.
+api_key: "${EVERMEMOS_API_KEY}"
+sync_mode: true
+max_retries: 5
+timeout_seconds: 60
+request_interval: 0.2
+trust_env: true
+# Temporary proxy workaround: the current proxy intercepts TLS and Python
+# does not trust its CA in this environment.
+ssl_verify: false
+readiness:
+  budget_seconds: 60
+  poll_interval_seconds: 5
+
+# Concurrency (conversation-level)
+num_workers: 1
+
+# Search configuration (maps to POST /api/v1/memories/search)
+search:
+  scope: "personal"
+  top_k: 10
+  # keep explicit fields for clarity/compatibility
+  # agentic may expand beyond session_id filters; hybrid preserved session scope in cloud smoke.
+  retrieve_method: "hybrid"
+  memory_types: ["episodic_memory"]
+  # Hosted API can be slow for agentic; tune here instead of hardcoding in code.
+  num_workers: 2
+  timeout_seconds: 300
+
+readback:
+  page_size: 100
+  max_pages: 20
+
+# LLM configuration (for answer generation, same as other online systems)
+llm:
+  provider: "openai"
+  model: "gpt-4o-mini"
+  api_key: "${ANSWER_LLM_API_KEY}"
+  base_url: "${ANSWER_LLM_BASE_URL:https://openrouter.ai/api/v1}"
+  temperature: 0
+  max_tokens: 16384
+
+answer:
+  max_retries: 3
