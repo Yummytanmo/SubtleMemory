@@ -20,6 +20,10 @@ dependencies = [
     "zep-cloud>=2.0.0",
 ]
 
+[project.urls]
+Homepage = "https://yummytanmo.github.io/SubtleMemory/"
+Repository = "https://github.com/Yummytanmo/SubtleMemory"
+
 [dependency-groups]
 amem = [
     "litellm",

@@ -252,7 +252,7 @@ function Hero() {
               <Icon name="chart" />
               Results
             </a>
-            <a className="secondary-link" href="https://github.com/qzds/SubtleMemory">
+            <a className="secondary-link" href="https://github.com/Yummytanmo/SubtleMemory">
               <Icon name="github" />
               Code
             </a>
@@ -969,7 +969,7 @@ function Resources() {
         <p>Long-horizon agent memory evaluation for relation-sensitive memory use.</p>
       </div>
       <div className="footer-links" aria-label="Project resources">
-        <a href="https://github.com/qzds/SubtleMemory">
+        <a href="https://github.com/Yummytanmo/SubtleMemory">
           <Icon name="github" />
           Code repository
         </a>
