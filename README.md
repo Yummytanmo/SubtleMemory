@@ -54,7 +54,8 @@ memories.
 
 ## News
 
-News will be added after the paper and project page are public.
+- **2026-06-04:** Project page is online:
+  [https://yummytanmo.github.io/SubtleMemory/](https://yummytanmo.github.io/SubtleMemory/)
 
 ## Repository Layout
 
