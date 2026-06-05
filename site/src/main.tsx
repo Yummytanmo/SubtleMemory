@@ -256,11 +256,11 @@ function Hero() {
               <Icon name="github" />
               Code
             </a>
-            <a className="secondary-link" href="https://arxiv.org/abs/TODO">
+            <a className="secondary-link" href="https://arxiv.org/abs/2606.05761">
               <Icon name="arxiv" />
               Preprint
             </a>
-            <a className="secondary-link" href="https://huggingface.co/papers/TODO">
+            <a className="secondary-link" href="https://huggingface.co/papers/2606.05761">
               <Icon name="huggingface" />
               Hugging Face
             </a>
@@ -973,11 +973,11 @@ function Resources() {
           <Icon name="github" />
           Code repository
         </a>
-        <a href="https://arxiv.org/abs/TODO">
+        <a href="https://arxiv.org/abs/2606.05761">
           <Icon name="arxiv" />
           Preprint
         </a>
-        <a href="https://huggingface.co/papers/TODO">
+        <a href="https://huggingface.co/papers/2606.05761">
           <Icon name="huggingface" />
           Hugging Face
         </a>
