@@ -12,6 +12,7 @@
   <a href="#data">Data</a> |
   <a href="#data-construction">Data Construction</a> |
   <a href="#evaluation">Evaluation</a> |
+  <a href="evaluation/README.md">Integration Guide</a> |
   <a href="#results">Results</a> |
   <a href="#citation">Citation</a>
 </p>
@@ -47,8 +48,9 @@ memories.
   `add -> finalize -> search -> answer -> evaluate` protocol.
 - **Failure diagnosis:** inspect stage artifacts to separate memory writing,
   finalization, retrieval, answer generation, and judging failures.
-- **Readback analysis:** compare normal search with readback mode, which uses
-  question provenance to expose memory objects written from target sessions.
+- **Readback analysis:** for adapters that support it, compare normal search
+  with optional readback mode, which uses question provenance to expose memory
+  objects written from target sessions.
 - **Relation-sensitive reporting:** evaluate relation-level behavior rather
   than only final answer accuracy.
 
@@ -205,6 +207,8 @@ project page:
 Standard `api` mode asks the memory system to retrieve evidence through its
 normal search API. `readback` mode instead uses question provenance, especially
 `session_ids`, to read back memory objects written from the target sessions.
+Readback is optional diagnostic support; a memory system can be benchmarked in
+normal `api` mode without implementing it.
 
 ```text
 api mode:      query -> provider search API -> answer -> evaluate
@@ -257,6 +261,11 @@ per question with session IDs, status, read objects, and errors.
 Each system YAML lives under `evaluation/config/systems/`. Most settings are
 configured through `.env`, so the same config file can be reused across
 machines.
+
+To add and benchmark a new memory system, see the detailed
+[evaluation integration guide](evaluation/README.md). It explains the system
+YAML, adapter contract, `api` versus optional `readback` search modes, registry
+wiring, artifact expectations, validation flow, and a Mem0 worked example.
 
 ## Outputs
 
