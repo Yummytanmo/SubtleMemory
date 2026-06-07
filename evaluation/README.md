@@ -124,15 +124,15 @@ readback can trace benchmark evidence through your system.
 Create a YAML file under `evaluation/config/systems/`. Keep credentials in
 `.env`; YAML values support `${VAR}` and `${VAR:default}` interpolation.
 
-Minimal example:
+Minimal example for `evaluation/config/systems/my-memory-system.yaml`:
 
 ```yaml
 name: "my-memory-system"
 version: "1.0"
 description: "My memory system"
 
-adapter: "my_memory_system"
-benchmark_mode: "category1"
+adapter: "my_memory_system"  # Must match the registry key and @register_adapter(...) value.
+benchmark_mode: "category1"  # Current SubtleMemory validation expects category1.
 semantic_chunk_policy: "native_system"
 transport_batch_policy: "batch_messages"
 
@@ -164,6 +164,14 @@ answer:
 
 The dataset config supplies the evaluator. For SubtleMemory, the default judge
 uses `JUDGE_LLM_API_KEY`, `JUDGE_LLM_BASE_URL`, and `JUDGE_LLM_MODEL`.
+
+In the example above, `--system my-memory-system` loads the YAML file by
+filename, while `adapter: "my_memory_system"` selects the Python adapter
+registered in `evaluation/src/adapters/core/registry.py`. These values can
+differ when the config name uses CLI-friendly hyphens and the registry key uses
+Python-friendly underscores, but the `adapter` value must exactly match the
+registry key. `benchmark_mode: "category1"` is the current SubtleMemory
+benchmark mode used by validation, not a free-form placeholder.
 
 Keep `search.mode` unset or set to `api` for the normal benchmark. Set it to
 `readback` only for an explicit diagnostic rerun, usually with
