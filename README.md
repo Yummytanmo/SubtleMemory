@@ -96,7 +96,34 @@ use for data construction. Common variables include:
 
 ## Data
 
-The generated SubtleMemory bench data is stored in this repository at:
+The generated SubtleMemory bench data is available on Hugging Face:
+
+- Dataset page: [Yummytanmo/SubtleMemory](https://huggingface.co/datasets/Yummytanmo/SubtleMemory)
+- Bench instance viewer: [bench_instances/persona_0](https://huggingface.co/datasets/Yummytanmo/SubtleMemory/viewer/bench_instances/persona_0)
+- History session viewer: [history_sessions/persona_0](https://huggingface.co/datasets/Yummytanmo/SubtleMemory/viewer/history_sessions/persona_0)
+
+The Hugging Face release preserves the repository data layout and exposes
+`persona_0` through `persona_9` as dataset splits. It provides two configs:
+`bench_instances` for benchmark cases and QA instances, and `history_sessions`
+for chronological conversation sessions.
+
+```python
+from datasets import load_dataset
+
+bench_p0 = load_dataset(
+    "Yummytanmo/SubtleMemory",
+    "bench_instances",
+    split="persona_0",
+)
+
+history_p0 = load_dataset(
+    "Yummytanmo/SubtleMemory",
+    "history_sessions",
+    split="persona_0",
+)
+```
+
+The same data is also stored in this repository at:
 
 ```text
 data/subtlememory/
